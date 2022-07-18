@@ -1,0 +1,105 @@
+﻿<Window x:Class="DashBoardDB.PdfReportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DashBoardDB"
+        mc:Ignorable="d"
+        Title="PdfReportWindow" Height="350" Width="500"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <Style x:Key="NoGlow" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Border  BorderBrush="White" BorderThickness="1">
+        <Grid Background="#0F0F2D">
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="80"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Click="Close_Click" BorderBrush="{x:Null}" Style="{StaticResource NoGlow}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/images/kisspng-line-angle-pink-m-product-design-symbol-close-window-icon-free-download-png-and-vector-5c6921a8128a99.937018031550393768076.png"/>
+                    </Button.Background>
+                </Button>
+                <TextBlock Text="Customize your Pdf report" FontSize="30" FontFamily="fonts/#Dosis" Foreground="White" 
+                       HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,31,0,0"></TextBlock>
+        </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="   Choose Page Size: " Foreground="White" FontSize="20" FontFamily="fonts/#Dosis" Grid.ColumnSpan="3" 
+                           VerticalAlignment="Top" HorizontalAlignment="Left" Margin="14,28,0,0"></TextBlock>
+                <RadioButton  Grid.Column="2" Style="{DynamicResource RadioButtonBig}" Name="A4" Foreground="White" FontSize="17" VerticalAlignment="Center" IsChecked="True">A4</RadioButton>
+                <RadioButton Grid.Column="3" Style="{DynamicResource RadioButtonBig}" Name="A5" Foreground="White" FontSize="17" VerticalAlignment="Center">A5</RadioButton>
+                <RadioButton Grid.Column="4" Style="{DynamicResource RadioButtonBig}" Name="A6" Foreground="White" FontSize="17" VerticalAlignment="Center">A6</RadioButton>
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="70"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Choose Data you want to include: " Foreground="White" FontSize="15" FontFamily="fonts/#Dosis" Margin="23,0,-23,0" Grid.ColumnSpan="2"></TextBlock>
+                    <CheckBox Name="ProfitData" Grid.Column="1" Foreground="White" HorizontalAlignment="Left" Margin="94,3,0,15" Grid.ColumnSpan="2">Profit Data</CheckBox>
+                    <CheckBox Name="SalesData" Grid.Column="2" Foreground="White" HorizontalAlignment="Left" Margin="60,3,0,15" Grid.ColumnSpan="2">Sales Data</CheckBox>
+                    <CheckBox Name="ProductTypeData" Grid.Column="1" Grid.Row="1" Foreground="White" HorizontalAlignment="Left" Margin="94,1,0,17" Grid.ColumnSpan="3">Sales By Product Type Data</CheckBox>
+                </Grid>
+                <TextBlock Grid.Row="1" Text="Get Data From: " Foreground="White" FontSize="15" FontFamily="fonts/#Dosis" Margin="23,0,-23,0"></TextBlock>
+                <ComboBox  Grid.Row="1" Name="GetDataFromDate" Width="250" Height="20" VerticalAlignment="Top" FontFamily="fonts/#Dosis">
+                    <ComboBoxItem Content="Last Day"></ComboBoxItem>
+                    <ComboBoxItem Content="Last 7 Days"></ComboBoxItem>
+                    <ComboBoxItem Content="Last 30 Days"></ComboBoxItem>
+                    <ComboBoxItem Content="Last Year"></ComboBoxItem>
+                </ComboBox>
+            </Grid>
+            <Button Name="CreatePDF" Content="Create PDF Report" Grid.Row="3" MaxWidth="300" MaxHeight="50" FontSize="20"
+                    Background="#201f3e" FontFamily="fonts/#Dosis" Foreground="White" Click="CreatePDF_Click"></Button>
+        </Grid>
+    </Border>
+</Window>

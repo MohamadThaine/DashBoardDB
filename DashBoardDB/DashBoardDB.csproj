@@ -1,0 +1,60 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="fonts\Dosis.ttf" />
+    <None Remove="images\3500833.png" />
+    <None Remove="images\app-icon-sales-order.png" />
+    <None Remove="images\dashboardicon.png" />
+    <None Remove="images\database.png" />
+    <None Remove="images\email.png" />
+    <None Remove="images\icon-pdf-6.jpg" />
+    <None Remove="images\increase-profit-png-profitable-icon-11563204734vs3sappgse.png" />
+    <None Remove="images\kisspng-line-angle-pink-m-product-design-symbol-close-window-icon-free-download-png-and-vector-5c6921a8128a99.937018031550393768076.png" />
+    <None Remove="images\new-order-icon-22.jpg" />
+    <None Remove="images\PikPng.com_business-icon-png_660381.png" />
+    <None Remove="images\PngItem_741993.png" />
+    <None Remove="images\print.png" />
+    <None Remove="images\products.png" />
+    <None Remove="images\profits %281%29.png" />
+    <None Remove="images\profits.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="7.1.2" />
+    <PackageReference Include="itext7" Version="7.2.3" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.3" />
+    <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-beta.300" />
+    <PackageReference Include="Microsoft.Toolkit.Mvvm" Version="7.1.2" />
+    <PackageReference Include="SciChart.Wpf.UI.Transitionz" Version="3.1.251" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="fonts\Dosis.ttf" />
+    <Resource Include="images\3500833.png" />
+    <Resource Include="images\app-icon-sales-order.png" />
+    <Resource Include="images\dashboardicon.png" />
+    <Resource Include="images\database.png" />
+    <Resource Include="images\email.png" />
+    <Resource Include="images\icon-pdf-6.jpg" />
+    <Resource Include="images\increase-profit-png-profitable-icon-11563204734vs3sappgse.png" />
+    <Resource Include="images\kisspng-line-angle-pink-m-product-design-symbol-close-window-icon-free-download-png-and-vector-5c6921a8128a99.937018031550393768076.png" />
+    <Resource Include="images\new-order-icon-22.jpg" />
+    <Resource Include="images\PikPng.com_business-icon-png_660381.png" />
+    <Resource Include="images\PngItem_741993.png" />
+    <Resource Include="images\print.png" />
+    <Resource Include="images\products.png" />
+    <Resource Include="images\profits (1).png" />
+    <Resource Include="images\profits.png" />
+  </ItemGroup>
+
+</Project>
