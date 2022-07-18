@@ -44,7 +44,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition Width="81"></ColumnDefinition>
+                    <ColumnDefinition Width="80"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="1" Click="Close_Click" BorderBrush="{x:Null}" Style="{StaticResource NoGlow}">
                     <Button.Background>
