@@ -1,24 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using System.Net.Mail;
-using System.Net;
-using MySql.Data;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using MySql.Data.MySqlClient;
+using System;
+using System.Windows;
 
 namespace DashBoardDB
 {
@@ -39,7 +22,8 @@ namespace DashBoardDB
                 try
                 {
                     connection.Open();
-                }catch(MySqlException MySQLEX)
+                }
+                catch (MySqlException MySQLEX)
                 {
                     DBError = "There was an error Connecting to the DB \n Error Code is: " + MySQLEX.HResult;
                     return;
@@ -87,7 +71,7 @@ namespace DashBoardDB
             using (cmd = new MySqlCommand(GetCounterOf7DaysProfit, connection))
             {
                 var NoPrfitChecker = cmd.ExecuteScalar();
-                if(NoPrfitChecker is not DBNull)
+                if (NoPrfitChecker is not DBNull)
                     CountersArray[2] = Convert.ToDouble(NoPrfitChecker);
             }
             using (cmd = new MySqlCommand(GetTodayOrdersCounter, connection))
@@ -141,7 +125,7 @@ namespace DashBoardDB
         }
         private void CheckForUpdateClick(object sender, RoutedEventArgs e)
         {
-            if(appVersion == LastVersion)
+            if (appVersion == LastVersion)
                 MessageBox.Show("No update Found!");
             else
                 MessageBox.Show("Update Found , Starting Download...");

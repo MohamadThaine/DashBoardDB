@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Text.RegularExpressions;
 
 namespace DashBoardDB
 {
@@ -22,8 +14,8 @@ namespace DashBoardDB
     {
         string[] AddType = new string[] { "Choose what you like to add", "Product", "Company", "Missing Order" };
         string[] RemoveType = new string[] { "Choose what you like to remove", "Product", "Company", "Order" };
-        Boolean addflag = false , AddChecker; //Add Checked used to check if the item has been added or not
-         Visibility Show = Visibility.Visible;
+        Boolean addflag = false, AddChecker; //Add Checked used to check if the item has been added or not
+        Visibility Show = Visibility.Visible;
         Visibility hide = Visibility.Hidden;
         bool emailvalition;
         ManageDB managaDB = new();
@@ -147,11 +139,11 @@ namespace DashBoardDB
                 expdateblock.Visibility = hide;
                 expdatepciker.Visibility = hide;
             }
-            
+
         }
         private void PrepareCompany()
         {
-            if(addflag != true)
+            if (addflag != true)
                 return;
             if (EditType.SelectedIndex == 2)
             {
@@ -210,7 +202,7 @@ namespace DashBoardDB
         {
             if (addflag != false)
                 return;
-            if(EditType.SelectedIndex == 1)
+            if (EditType.SelectedIndex == 1)
             {
                 hideboxes();
                 productpfpriceblock.Text = "        Name:";
@@ -260,13 +252,13 @@ namespace DashBoardDB
                     PrepareAddProduct();
 
                 }
-                else if(EditType.SelectedIndex == 2)
+                else if (EditType.SelectedIndex == 2)
                 {
                     PrepareMissingOrder();
                     PrepareAddProduct();
                     PrepareCompany();
                 }
-                else if(EditType.SelectedIndex == 3)
+                else if (EditType.SelectedIndex == 3)
                 {
                     PrepareAddProduct();
                     PrepareCompany();
@@ -277,19 +269,19 @@ namespace DashBoardDB
             }
             else
             {
-                if(EditType.SelectedIndex == 1)
+                if (EditType.SelectedIndex == 1)
                 {
                     PrepareRemoveCompany();
                     PrepareRemoveOrder();
                     PrepareRemoveProdect();
                 }
-                else if(EditType.SelectedIndex == 2)
+                else if (EditType.SelectedIndex == 2)
                 {
                     PrepareRemoveProdect();
                     PrepareRemoveOrder();
                     PrepareRemoveCompany();
                 }
-                else if(EditType.SelectedIndex == 3)
+                else if (EditType.SelectedIndex == 3)
                 {
                     PrepareRemoveProdect();
                     PrepareRemoveCompany();
@@ -297,7 +289,7 @@ namespace DashBoardDB
                 }
                 else
                     hideboxes();
-            }     
+            }
         }
         private void quantitybox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
@@ -306,12 +298,12 @@ namespace DashBoardDB
                 Regex regex = new Regex("[^0-9]+");
                 e.Handled = regex.IsMatch(e.Text);
             }
-           
+
         }
 
         private void productpfbricebox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+
             if (productpfpriceblock.Text == "Email:")
                 emailvalition = IsValidEmailAddress(productojbricebox.Text);
 
@@ -327,16 +319,16 @@ namespace DashBoardDB
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
-            if(PhoneNumbox.Text.Length >= 10)
+            if (PhoneNumbox.Text.Length >= 10)
             {
                 MessageBox.Show("Phone Number cant be more than 10 numbers!");
             }
         }
         private void Enter_KeyDown(object sender, KeyEventArgs e)
         {
-            if(addflag == true)
+            if (addflag == true)
             {
-                if(EditType.SelectedIndex == 3)
+                if (EditType.SelectedIndex == 3)
                 {
                     if (e.Key == Key.Return)
                     {
@@ -344,7 +336,7 @@ namespace DashBoardDB
                         AddProductToOrderBlock.Text += Environment.NewLine + productnamebox.Text;
                     }
                 }
-            }   
+            }
         }
         private void Confirm_Click(object sender, RoutedEventArgs e)
         {
@@ -352,15 +344,15 @@ namespace DashBoardDB
                 if (EditType.SelectedIndex == 1)
                 {
                     AddChecker = managaDB.insertProduct(productnamebox.Text, TypeBox.SelectedItem.ToString(), CompanyBox.SelectedItem.ToString(),
-                        Convert.ToInt32(quantitybox.Text), Convert.ToDouble(productojbricebox.Text), Convert.ToDouble(productpfbricebox.Text) , expdatepciker.SelectedDate.Value);
+                        Convert.ToInt32(quantitybox.Text), Convert.ToDouble(productojbricebox.Text), Convert.ToDouble(productpfbricebox.Text), expdatepciker.SelectedDate.Value);
                     if (AddChecker == true)
                         MessageBox.Show("Product has been added to the DB");
                     else
                         MessageBox.Show("There was an error adding the product to the DB");
                 }
-                    
+
 
 
         }
-    }       
+    }
 }

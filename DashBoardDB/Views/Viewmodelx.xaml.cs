@@ -1,12 +1,8 @@
-﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
-using System.Windows.Media;
-using LiveChartsCore.SkiaSharpView.Painting;
-using SkiaSharp;
-using MySql.Data;
 using MySql.Data.MySqlClient;
+using System;
 
 namespace DashBoardDB
 {
@@ -21,12 +17,13 @@ namespace DashBoardDB
         {
             ManageDB manageDB = new();
             connection = manageDB.ConnectionToDB();
-            if(connection != null)
+            if (connection != null)
             {
                 try
                 {
                     connection.Open();
-                }catch(MySqlException MYSQLEX)
+                }
+                catch (MySqlException MYSQLEX)
                 {
                     //
                 }
@@ -60,16 +57,16 @@ namespace DashBoardDB
                               }
                               };
         }
-            
+
         public ISeries[] SeriesCollection { get; set; }
-        private void GetLast10DaysProfit(DateTime[] dates , Double[] profit)
+        private void GetLast10DaysProfit(DateTime[] dates, Double[] profit)
         {
             MySqlCommand cmd;
             String Get10DaysProfit = "";
             for (int i = 0; i < 10; i++)
             {
-                Get10DaysProfit  = "SELECT SUM(ProfitFromOrder) FROM orders WHERE DATE(OrderDate) = CURRENT_DATE() - interval " + i + " day";
-                using(cmd = new MySqlCommand(Get10DaysProfit , connection))
+                Get10DaysProfit = "SELECT SUM(ProfitFromOrder) FROM orders WHERE DATE(OrderDate) = CURRENT_DATE() - interval " + i + " day";
+                using (cmd = new MySqlCommand(Get10DaysProfit, connection))
                 {
                     var CheckNoProfit = cmd.ExecuteScalar();
                     if (CheckNoProfit is not DBNull)

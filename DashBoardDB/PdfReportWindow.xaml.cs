@@ -1,20 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using iTextSharp.text;
+﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
-using System.IO;
 using Microsoft.Win32;
+using System;
+using System.IO;
+using System.Windows;
 
 namespace DashBoardDB
 {
@@ -39,7 +28,7 @@ namespace DashBoardDB
         }
         private void CreatePDF_Click(object sender, RoutedEventArgs e)
         {
-            if(!DataChecked())
+            if (!DataChecked())
             {
                 MessageBox.Show("Please Check the data you want to create pdf report with");
                 return;

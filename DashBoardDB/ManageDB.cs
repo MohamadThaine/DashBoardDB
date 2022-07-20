@@ -1,11 +1,6 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using MySql.Data;
-using MySql.Data.MySqlClient;
 
 namespace DashBoardDB
 {
@@ -21,10 +16,10 @@ namespace DashBoardDB
             connection = new MySqlConnection(@"user id=root;password=123321Aa.;server=localhost;database=market;persistsecurityinfo=True");
             return connection;
         }
-        public bool insertProduct(String ProductName , String ProductTypeName , String CompanyName , int Quantity , Double ProductOGprice , Double ProductPfprice , DateTime EXPdate)
+        public bool insertProduct(String ProductName, String ProductTypeName, String CompanyName, int Quantity, Double ProductOGprice, Double ProductPfprice, DateTime EXPdate)
         {
             MySqlCommand cmd;
-            int ProductTypeID = 0 , CompanyID = 0;
+            int ProductTypeID = 0, CompanyID = 0;
             String SQLstatment;
             if (connection.State == System.Data.ConnectionState.Closed)
             {
@@ -37,7 +32,7 @@ namespace DashBoardDB
                     return false;
                 }
             }
-                
+
             SQLstatment = "SELECT idCompanies FROM companies WHERE CompanyName LIKE '%" + CompanyName + "%'";
             using (cmd = new MySqlCommand(SQLstatment, connection))
             {
@@ -68,7 +63,7 @@ namespace DashBoardDB
                 cmd.Parameters.AddWithValue("@ProfitPriceP", ProductPfprice);
                 cmd.Parameters.AddWithValue("@ExpDateP", EXPdate);
                 cmd.ExecuteNonQuery();
-               
+
             }
             return true;
         }
@@ -89,10 +84,10 @@ namespace DashBoardDB
                     //
                 }
             }
-            using (cmd = new MySqlCommand(SQLstatment , connection))
+            using (cmd = new MySqlCommand(SQLstatment, connection))
             {
                 reader = cmd.ExecuteReader();
-                while(reader.Read())
+                while (reader.Read())
                 {
                     TypesName.Add(reader.GetString(0));
                 }
