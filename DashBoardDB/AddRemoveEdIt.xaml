@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DashBoardDB"
         mc:Ignorable="d"
-        Title="AddRemoveEdIt" Height="500" Width="400"
+        Title="AddRemoveEdIt" Height="580" Width="400"
         ResizeMode="NoResize"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
@@ -267,29 +267,33 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <ComboBox Name="EditType" Width="250" Height="30" VerticalAlignment="Top" FontFamily="fonts/#Dosis" BorderBrush="{x:Null}" SelectionChanged="EditType_SelectionChanged">
                 </ComboBox>
                 <TextBox Name="productnamebox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2"  FontSize="20" FontFamily="fonts/#Dosis" KeyDown="Enter_KeyDown"/>
                 <TextBlock Grid.Row="1" Name="productnameblock" Text="Name:" TextWrapping="Wrap" Margin="26,2,290,20" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White" Height="25" />
-                <TextBox Name="productojbricebox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="1" PreviewTextInput="quantitybox_PreviewTextInput" FontSize="20" FontFamily="fonts/#Dosis"/>
-                <TextBlock Grid.Row="2" Name="productogpriceblock" Text="Orignal price:" TextWrapping="Wrap" Margin="2,5,318,17" FontSize="13" FontFamily="fonts/#Dosis" Foreground="White"/>
-                <TextBox Name="productpfbricebox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="2" PreviewTextInput="quantitybox_PreviewTextInput" FontSize="20" FontFamily="fonts/#Dosis" TextChanged="productpfbricebox_TextChanged" />
+                <TextBlock Grid.Row="2" Name="ProductTypeBlock" Text="Type:" TextWrapping="Wrap" Margin="26,2,290,20" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White" Height="25" />
+                <ComboBox Grid.Row="2" Name="TypeBox" Width="250" Height="30" VerticalAlignment="Top" FontFamily="fonts/#Dosis" BorderBrush="{x:Null}" IsEditable="True">
+                </ComboBox>
+                <TextBlock Grid.Row="3" Name="productogpriceblock" Text="Orignal price:" TextWrapping="Wrap" Margin="2,5,318,17" FontSize="13" FontFamily="fonts/#Dosis" Foreground="White"/>
+                <TextBox Name="productojbricebox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="2" PreviewTextInput="quantitybox_PreviewTextInput" FontSize="20" FontFamily="fonts/#Dosis"/>
+                <TextBox Name="productpfbricebox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="3" PreviewTextInput="quantitybox_PreviewTextInput" FontSize="20" FontFamily="fonts/#Dosis" TextChanged="productpfbricebox_TextChanged" />
                 <ScrollViewer Name="ScrollBar" Grid.Row="2" Grid.RowSpan="4" Visibility="Hidden" IsEnabled="False">
                     <TextBlock Name="AddProductToOrderBlock" Text="Press Enter to add the product you want" Grid.Row="2" Grid.RowSpan="4" HorizontalAlignment="Center" Visibility="Hidden" FontFamily="fonts/#Dosis" FontSize="20" Foreground="White"></TextBlock>
                 </ScrollViewer>
-                <TextBlock Grid.Row="3" Name="productpfpriceblock" Text="Profit price:" TextWrapping="Wrap" Margin="2,4,318,18" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White"/>
-                <TextBlock Grid.Row="4" Name="expdateblock" Text="Exp date:" TextWrapping="Wrap" Margin="14,5,306,17" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White"/>
-                <DatePicker  Name="expdatepciker" FontFamily="fonts/#Dosis" MaxHeight="30" MaxWidth="250" Margin="-2,42,2,5" Grid.RowSpan="2" Grid.Row="3" BorderBrush="{x:Null}"/>
-                <TextBlock Grid.Row="5" Name="companyblock" Text="Manufacturer:" TextWrapping="Wrap" Margin="2,6,318,16" FontSize="13" FontFamily="fonts/#Dosis" Foreground="White"/>
-                <ComboBox Grid.Row="5" Name="CompanyBox" Width="250" Height="30" VerticalAlignment="Top" FontFamily="fonts/#Dosis" BorderBrush="{x:Null}" IsEditable="True">
+                <TextBlock Grid.Row="4" Name="productpfpriceblock" Text="Profit price:" TextWrapping="Wrap" Margin="2,4,318,18" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White"/>
+                <TextBlock Grid.Row="5" Name="expdateblock" Text="Exp date:" TextWrapping="Wrap" Margin="14,5,306,17" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White"/>
+                <DatePicker  Name="expdatepciker" FontFamily="fonts/#Dosis" MaxHeight="30" MaxWidth="250" Margin="-2,42,2,5" Grid.RowSpan="2" Grid.Row="4" BorderBrush="{x:Null}"/>
+                <TextBlock Grid.Row="6" Name="companyblock" Text="Manufacturer:" TextWrapping="Wrap" Margin="2,6,318,16" FontSize="13" FontFamily="fonts/#Dosis" Foreground="White"/>
+                <ComboBox Grid.Row="6" Name="CompanyBox" Width="250" Height="30" VerticalAlignment="Top" FontFamily="fonts/#Dosis" BorderBrush="{x:Null}" IsEditable="True">
                 </ComboBox>
-                <TextBlock Grid.Row="5" Name="PhoneNumber" Text="Phone Number:" TextWrapping="Wrap" Margin="4,7,316,15" FontSize="11" FontFamily="fonts/#Dosis" Foreground="White" Visibility="Hidden" />
-                <TextBox Name="PhoneNumbox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="4"  FontSize="20" FontFamily="fonts/#Dosis" Visibility="Hidden" PreviewTextInput="PhoneNumber_PreviewTextInput"/>
-                <TextBlock Grid.Row="6" Name="quantityblock" Text="Quantity:" TextWrapping="Wrap" Margin="16,5,304,17" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White"/>
-                <TextBox Name="quantitybox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="5"  PreviewTextInput="quantitybox_PreviewTextInput" FontSize="20" FontFamily="fonts/#Dosis"/>
+                <TextBlock Grid.Row="6" Name="PhoneNumber" Text="Phone Number:" TextWrapping="Wrap" Margin="4,7,316,15" FontSize="11" FontFamily="fonts/#Dosis" Foreground="White" Visibility="Hidden" />
+                <TextBox Name="PhoneNumbox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="5"  FontSize="20" FontFamily="fonts/#Dosis" Visibility="Hidden" PreviewTextInput="PhoneNumber_PreviewTextInput"/>
+                <TextBlock Grid.Row="7" Name="quantityblock" Text="Quantity:" TextWrapping="Wrap" Margin="16,5,304,17" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White"/>
+                <TextBox Name="quantitybox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="6"  PreviewTextInput="quantitybox_PreviewTextInput" FontSize="20" FontFamily="fonts/#Dosis"/>
             </Grid>
-            <Button Style="{DynamicResource RoundedButton}" Name="Confirm" Content="Confirm" FontSize="20" Background="#FE6584" FontFamily="fonts/#Dosis" MaxHeight="30" MaxWidth="150" Grid.Row="3"/>
+            <Button Style="{DynamicResource RoundedButton}" Name="Confirm" Content="Confirm" FontSize="20" Background="#FE6584" FontFamily="fonts/#Dosis" MaxHeight="30" MaxWidth="150" Grid.Row="3" Click="Confirm_Click"/>
         </Grid>
     </Border>
 </Window>

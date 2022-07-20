@@ -63,9 +63,7 @@ namespace DashBoardDB
             String GetLastVersionFromDB = "SELECT VersionNum FROM aboutapp ORDER BY idAboutApp DESC LIMIT 1";
             MySqlCommand cmd;
             using (cmd = new MySqlCommand(GetLastVersionFromDB, connection))
-            {
                 LastVersion = Convert.ToDouble(cmd.ExecuteScalar());
-            }
             return LastVersion;
         }
         private Double[] GetProductNumber()
@@ -90,25 +88,19 @@ namespace DashBoardDB
             {
                 var NoPrfitChecker = cmd.ExecuteScalar();
                 if(NoPrfitChecker is not DBNull)
-                {
                     CountersArray[2] = Convert.ToDouble(NoPrfitChecker);
-                }
             }
             using (cmd = new MySqlCommand(GetTodayOrdersCounter, connection))
             {
                 var NoOrdersTodayChecker = cmd.ExecuteScalar();
                 if (NoOrdersTodayChecker is not DBNull)
-                {
                     CountersArray[3] = Convert.ToInt32(NoOrdersTodayChecker);
-                }
             }
             using (cmd = new MySqlCommand(GetTodayProfit, connection))
             {
                 var NoProfitTodayChecker = cmd.ExecuteScalar();
                 if (NoProfitTodayChecker is not DBNull)
-                {
                     CountersArray[4] = Convert.ToDouble(NoProfitTodayChecker);
-                }
             }
             return CountersArray;
         }
@@ -139,28 +131,20 @@ namespace DashBoardDB
         {
             MessageBoxResult confirm = MessageBox.Show("Are you sure?", "Exit Confirmation", MessageBoxButton.YesNo);
             if (confirm == MessageBoxResult.Yes)
-            {
                 Application.Current.Shutdown();
-            }
         }
         private void MenuClick(object sender, RoutedEventArgs e)
         {
             var addButton = sender as FrameworkElement;
             if (addButton != null)
-            {
                 addButton.ContextMenu.IsOpen = true;
-            }
         }
         private void CheckForUpdateClick(object sender, RoutedEventArgs e)
         {
             if(appVersion == LastVersion)
-            {
                 MessageBox.Show("No update Found!");
-            }
             else
-            {
                 MessageBox.Show("Update Found , Starting Download...");
-            }
         }
         private void AboutUsClick(object sender, RoutedEventArgs e)
         {

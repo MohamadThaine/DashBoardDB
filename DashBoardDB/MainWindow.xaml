@@ -90,10 +90,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30">
-
             </RowDefinition>
             <RowDefinition Height="560">
-
             </RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>

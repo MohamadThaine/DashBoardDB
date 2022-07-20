@@ -28,7 +28,7 @@ namespace DashBoardDB
                     connection.Open();
                 }catch(MySqlException MYSQLEX)
                 {
-                   //
+                    //
                 }
                 GetLast10DaysProfit(lastTenDaysDate, lastTenDaysProfit);
             }

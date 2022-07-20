@@ -22,10 +22,13 @@ namespace DashBoardDB
     {
         string[] AddType = new string[] { "Choose what you like to add", "Product", "Company", "Missing Order" };
         string[] RemoveType = new string[] { "Choose what you like to remove", "Product", "Company", "Order" };
-        Boolean addflag = false;
-        Visibility Show = Visibility.Visible;
+        Boolean addflag = false , AddChecker; //Add Checked used to check if the item has been added or not
+         Visibility Show = Visibility.Visible;
         Visibility hide = Visibility.Hidden;
         bool emailvalition;
+        ManageDB managaDB = new();
+        List<String> TypesList = new List<String>();
+        List<String> CompaniesList = new List<String>();
         public AddRemoveEdIt()
         {
             InitializeComponent();
@@ -66,6 +69,12 @@ namespace DashBoardDB
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             hidden();
+            TypesList = managaDB.GetAllTypes();
+            CompaniesList = managaDB.GetAllCompanies();
+            foreach (String TypeName in TypesList)
+                TypeBox.Items.Add(TypeName);
+            foreach (String CompanyName in CompaniesList)
+                CompanyBox.Items.Add(CompanyName);
         }
         private void hidden()
         {
@@ -77,6 +86,8 @@ namespace DashBoardDB
         {
             productnameblock.Visibility = hide;
             productnamebox.Visibility = hide;
+            ProductTypeBlock.Visibility = hide;
+            TypeBox.Visibility = hide;
             productogpriceblock.Visibility = hide;
             productojbricebox.Visibility = hide;
             productpfpriceblock.Visibility = hide;
@@ -100,6 +111,8 @@ namespace DashBoardDB
                 productnamebox.Visibility = Show;
                 productnameblock.Text = "Name:";
                 productnameblock.Margin = new Thickness(26, 2, 290, 20);
+                ProductTypeBlock.Visibility = Show;
+                TypeBox.Visibility = Show;
                 productogpriceblock.Visibility = Show;
                 productojbricebox.Visibility = Show;
                 productpfpriceblock.Visibility = Show;
@@ -121,6 +134,8 @@ namespace DashBoardDB
             {
                 productnameblock.Visibility = hide;
                 productnamebox.Visibility = hide;
+                ProductTypeBlock.Visibility = hide;
+                TypeBox.Visibility = hide;
                 productogpriceblock.Visibility = hide;
                 productojbricebox.Visibility = hide;
                 productpfpriceblock.Visibility = hide;
@@ -137,9 +152,7 @@ namespace DashBoardDB
         private void PrepareCompany()
         {
             if(addflag != true)
-            {
                 return;
-            }
             if (EditType.SelectedIndex == 2)
             {
                 productnameblock.Visibility = Show;
@@ -196,9 +209,7 @@ namespace DashBoardDB
         private void PrepareRemoveProdect()
         {
             if (addflag != false)
-            {
                 return;
-            }
             if(EditType.SelectedIndex == 1)
             {
                 hideboxes();
@@ -262,9 +273,7 @@ namespace DashBoardDB
                     PrepareMissingOrder();
                 }
                 else
-                {
                     hideboxes();
-                }
             }
             else
             {
@@ -287,13 +296,9 @@ namespace DashBoardDB
                     PrepareRemoveOrder();
                 }
                 else
-                {
                     hideboxes();
-                }
-            }
-                
+            }     
         }
-
         private void quantitybox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (productpfpriceblock.Text == "Profit Price:")
@@ -327,7 +332,6 @@ namespace DashBoardDB
                 MessageBox.Show("Phone Number cant be more than 10 numbers!");
             }
         }
-
         private void Enter_KeyDown(object sender, KeyEventArgs e)
         {
             if(addflag == true)
@@ -341,6 +345,22 @@ namespace DashBoardDB
                     }
                 }
             }   
+        }
+        private void Confirm_Click(object sender, RoutedEventArgs e)
+        {
+            if (addflag == true)
+                if (EditType.SelectedIndex == 1)
+                {
+                    AddChecker = managaDB.insertProduct(productnamebox.Text, TypeBox.SelectedItem.ToString(), CompanyBox.SelectedItem.ToString(),
+                        Convert.ToInt32(quantitybox.Text), Convert.ToDouble(productojbricebox.Text), Convert.ToDouble(productpfbricebox.Text) , expdatepciker.SelectedDate.Value);
+                    if (AddChecker == true)
+                        MessageBox.Show("Product has been added to the DB");
+                    else
+                        MessageBox.Show("There was an error adding the product to the DB");
+                }
+                    
+
+
         }
     }       
 }
