@@ -32,8 +32,11 @@ namespace DashBoardDB
         {
             ManageDB DBmanager = new();
             connection = DBmanager.ConnectionToDB();
-            connection.Open();
-            ArrayCounter = GetProductNumber();
+            if(connection != null)
+            {
+                connection.Open();
+                ArrayCounter = GetProductNumber();
+            }
         }
         private Double[] GetProductNumber()
         {
@@ -91,6 +94,11 @@ namespace DashBoardDB
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (connection == null)
+            {
+                MessageBox.Show("Failed to Connect to the database");
+                System.Windows.Application.Current.Shutdown();
+            }
             PrepareCountersText();
         }
         private void MenuClick(object sender, RoutedEventArgs e)

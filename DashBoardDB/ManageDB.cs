@@ -13,15 +13,7 @@ namespace DashBoardDB
     {
         public MySqlConnection ConnectionToDB()
         {
-            MySqlConnection connection = null;
-            try
-            {
-                connection = new MySqlConnection(@"user id=root;password=123321Aa.;server=localhost;database=market;persistsecurityinfo=True");
-            }
-            catch (MySqlException DBExc)
-            {
-                MessageBox.Show("Error Connection to DB \n Error Code: " + DBExc.HResult);
-            }
+            MySqlConnection connection = new MySqlConnection(@"user id=root;password=123321Aa.;server=localhost;database=market;persistsecurityinfo=True");
             return connection;
         }
     }
