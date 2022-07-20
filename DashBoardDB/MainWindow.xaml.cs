@@ -25,26 +25,59 @@ namespace DashBoardDB
     [ObservableObject]
     public partial class MainWindow : Window
     {
-        double appVersion = 1.0;
+        Double appVersion = 0.2;
+        Double LastVersion = 0;
         MySqlConnection connection = null;
-        Double[] ArrayCounter = new Double[3];
+        Double[] ArrayCounter = new Double[5];
+        string DBError = "";
         public MainWindow()
         {
             ManageDB DBmanager = new();
             connection = DBmanager.ConnectionToDB();
-            if(connection != null)
+            if (connection != null)
             {
-                connection.Open();
+                try
+                {
+                    connection.Open();
+                }catch(MySqlException MySQLEX)
+                {
+                    DBError = "There was an error Connecting to the DB \n Error Code is: " + MySQLEX.HResult;
+                    return;
+                }
                 ArrayCounter = GetProductNumber();
+                LastVersion = GetLastVersion();
             }
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DBError != "")
+            {
+                MessageBox.Show(DBError, "Error with the DataBase");
+                Application.Current.Shutdown();
+            }
+            PrepareCountersText();
+        }
+        private Double GetLastVersion()
+        {
+            Double LastVersion = 0;
+            String GetLastVersionFromDB = "SELECT VersionNum FROM aboutapp ORDER BY idAboutApp DESC LIMIT 1";
+            MySqlCommand cmd;
+            using (cmd = new MySqlCommand(GetLastVersionFromDB, connection))
+            {
+                LastVersion = Convert.ToDouble(cmd.ExecuteScalar());
+            }
+            return LastVersion;
         }
         private Double[] GetProductNumber()
         {
-            Double[] CountersArray = new Double[3];
+            Double[] CountersArray = new Double[5];
             MySqlCommand cmd;
             String GetCounterOfProducts = "SELECT COUNT(*) FROM products";
             String GetCounterOfCompanies = "SELECT COUNT(*) FROM companies";
-            String GetCounterOf7DaysProfit = "SELECT SUM(ProfitFromOrder) FROM orders WHERE OrderDate > now() - interval 7 day";
+            String GetCounterOf7DaysProfit = "SELECT SUM(ProfitFromOrder) FROM orders WHERE DATE(OrderDate) > CURRENT_DATE() - interval 7 day";
+            String GetTodayOrdersCounter = "SELECT COUNT(*) FROM orders WHERE DATE(OrderDate) = CURRENT_DATE()";
+            String GetTodayProfit = "SELECT SUM(ProfitFromOrder) FROM orders WHERE DATE(OrderDate) = CURRENT_DATE() ";
+
             using (cmd = new MySqlCommand(GetCounterOfProducts, connection))
             {
                 CountersArray[0] = Convert.ToInt32(cmd.ExecuteScalar());
@@ -55,10 +88,26 @@ namespace DashBoardDB
             }
             using (cmd = new MySqlCommand(GetCounterOf7DaysProfit, connection))
             {
-                var NoProdfitChecker = cmd.ExecuteScalar();
-                if(NoProdfitChecker is not DBNull)
+                var NoPrfitChecker = cmd.ExecuteScalar();
+                if(NoPrfitChecker is not DBNull)
                 {
-                    CountersArray[2] = Convert.ToDouble(NoProdfitChecker);
+                    CountersArray[2] = Convert.ToDouble(NoPrfitChecker);
+                }
+            }
+            using (cmd = new MySqlCommand(GetTodayOrdersCounter, connection))
+            {
+                var NoOrdersTodayChecker = cmd.ExecuteScalar();
+                if (NoOrdersTodayChecker is not DBNull)
+                {
+                    CountersArray[3] = Convert.ToInt32(NoOrdersTodayChecker);
+                }
+            }
+            using (cmd = new MySqlCommand(GetTodayProfit, connection))
+            {
+                var NoProfitTodayChecker = cmd.ExecuteScalar();
+                if (NoProfitTodayChecker is not DBNull)
+                {
+                    CountersArray[4] = Convert.ToDouble(NoProfitTodayChecker);
                 }
             }
             return CountersArray;
@@ -67,7 +116,9 @@ namespace DashBoardDB
         {
             TotalProducts.Text = ArrayCounter[0].ToString();
             TotalCompanies.Text = ArrayCounter[1].ToString();
-            TotalProfits.Text = ArrayCounter[2].ToString();
+            TotalProfits.Text = ArrayCounter[2].ToString() + "$";
+            OrdersToday.Text = ArrayCounter[3].ToString();
+            ProfitToday.Text = ArrayCounter[4].ToString() + "$";
         }
         private void Email_Click(object sender, RoutedEventArgs e)
         {
@@ -86,20 +137,11 @@ namespace DashBoardDB
         }
         private void exit_Click(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult confirm = System.Windows.MessageBox.Show("Are you sure?", "Exit Confirmation", System.Windows.MessageBoxButton.YesNo);
+            MessageBoxResult confirm = MessageBox.Show("Are you sure?", "Exit Confirmation", MessageBoxButton.YesNo);
             if (confirm == MessageBoxResult.Yes)
             {
-                System.Windows.Application.Current.Shutdown();
+                Application.Current.Shutdown();
             }
-        }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (connection == null)
-            {
-                MessageBox.Show("Failed to Connect to the database");
-                System.Windows.Application.Current.Shutdown();
-            }
-            PrepareCountersText();
         }
         private void MenuClick(object sender, RoutedEventArgs e)
         {
@@ -111,7 +153,7 @@ namespace DashBoardDB
         }
         private void CheckForUpdateClick(object sender, RoutedEventArgs e)
         {
-            if(appVersion == 1.0)//Get Last Update Version from database
+            if(appVersion == LastVersion)
             {
                 MessageBox.Show("No update Found!");
             }

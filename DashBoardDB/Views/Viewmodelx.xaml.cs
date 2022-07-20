@@ -5,26 +5,46 @@ using LiveChartsCore.SkiaSharpView;
 using System.Windows.Media;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
+using MySql.Data;
+using MySql.Data.MySqlClient;
 
 namespace DashBoardDB
 {
     [ObservableObject]
     public partial class Viewmodelx
     {
+        MySqlConnection connection;
+        Double[] lastTenDaysProfit = new double[10];
+        DateTime[] lastTenDaysDate = new DateTime[10];
+
         public Viewmodelx()
         {
+            ManageDB manageDB = new();
+            connection = manageDB.ConnectionToDB();
+            if(connection != null)
+            {
+                try
+                {
+                    connection.Open();
+                }catch(MySqlException MYSQLEX)
+                {
+                   //
+                }
+                GetLast10DaysProfit(lastTenDaysDate, lastTenDaysProfit);
+            }
+            int i = 9;
             var tendays = new[]
             {
-                new days {Name = "1/6" , profit = 5},
-                new days {Name = "2/6" , profit = 10},
-                new days {Name = "3/6" , profit = 15},
-                new days {Name = "4/6" , profit = 10},
-                new days {Name = "5/6" , profit = 20},
-                new days {Name = "6/6" , profit = 35},
-                new days {Name = "7/6" , profit = 30},
-                new days {Name = "8/6" , profit = 20},
-                new days {Name = "9/6" , profit = 50},
-                new days {Name = "10/6" , profit = 70}
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--]},
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--]},
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--]},
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--]},
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--]},
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--] },
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--]},
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--]},
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--]},
+                new days {Name = lastTenDaysDate[i].ToString("MM/dd") , profit = lastTenDaysProfit[i--]}
             };
             SeriesCollection = new[]{
                               new LineSeries<days>
@@ -42,6 +62,22 @@ namespace DashBoardDB
         }
             
         public ISeries[] SeriesCollection { get; set; }
+        private void GetLast10DaysProfit(DateTime[] dates , Double[] profit)
+        {
+            MySqlCommand cmd;
+            String Get10DaysProfit = "";
+            for (int i = 0; i < 10; i++)
+            {
+                Get10DaysProfit  = "SELECT SUM(ProfitFromOrder) FROM orders WHERE DATE(OrderDate) = CURRENT_DATE() - interval " + i + " day";
+                using(cmd = new MySqlCommand(Get10DaysProfit , connection))
+                {
+                    var CheckNoProfit = cmd.ExecuteScalar();
+                    if (CheckNoProfit is not DBNull)
+                        profit[i] = Convert.ToDouble(CheckNoProfit);
+                    dates[i] = DateTime.Today.AddDays(-i);
+                }
+            }
+        }
     }
     public class days
     {

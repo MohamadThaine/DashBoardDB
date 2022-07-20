@@ -92,7 +92,7 @@
                 </Grid>
                 <TextBlock Grid.Row="1" Text="Get Data From: " Foreground="White" FontSize="15" FontFamily="fonts/#Dosis" Margin="23,0,-23,0"></TextBlock>
                 <ComboBox  Grid.Row="1" Name="GetDataFromDate" Width="250" Height="20" VerticalAlignment="Top" FontFamily="fonts/#Dosis">
-                    <ComboBoxItem Content="Last Day"></ComboBoxItem>
+                    <ComboBoxItem Content="Last Day" IsSelected="True"></ComboBoxItem>
                     <ComboBoxItem Content="Last 7 Days"></ComboBoxItem>
                     <ComboBoxItem Content="Last 30 Days"></ComboBoxItem>
                     <ComboBoxItem Content="Last Year"></ComboBoxItem>

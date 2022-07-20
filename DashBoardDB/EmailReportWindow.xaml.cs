@@ -75,8 +75,7 @@ namespace DashBoardDB
                 catch(Exception ex)
                 {
                     MessageBox.Show("Erros happend and email has not been sent \n Error Code is: " + ex.HResult);
-                }
-                
+                }  
         }
         private void Close_Click(object sender, RoutedEventArgs e)
         {
