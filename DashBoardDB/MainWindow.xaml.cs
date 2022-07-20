@@ -17,6 +17,8 @@ using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using System.Net.Mail;
 using System.Net;
+using MySql.Data;
+using MySql.Data.MySqlClient;
 
 namespace DashBoardDB
 {
@@ -24,9 +26,45 @@ namespace DashBoardDB
     public partial class MainWindow : Window
     {
         double appVersion = 1.0;
+        MySqlConnection connection = null;
+        Double[] ArrayCounter = new Double[3];
         public MainWindow()
         {
-            
+            ManageDB DBmanager = new();
+            connection = DBmanager.ConnectionToDB();
+            connection.Open();
+            ArrayCounter = GetProductNumber();
+        }
+        private Double[] GetProductNumber()
+        {
+            Double[] CountersArray = new Double[3];
+            MySqlCommand cmd;
+            String GetCounterOfProducts = "SELECT COUNT(*) FROM products";
+            String GetCounterOfCompanies = "SELECT COUNT(*) FROM companies";
+            String GetCounterOf7DaysProfit = "SELECT SUM(ProfitFromOrder) FROM orders WHERE OrderDate > now() - interval 7 day";
+            using (cmd = new MySqlCommand(GetCounterOfProducts, connection))
+            {
+                CountersArray[0] = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            using (cmd = new MySqlCommand(GetCounterOfCompanies, connection))
+            {
+                CountersArray[1] = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            using (cmd = new MySqlCommand(GetCounterOf7DaysProfit, connection))
+            {
+                var NoProdfitChecker = cmd.ExecuteScalar();
+                if(NoProdfitChecker is not DBNull)
+                {
+                    CountersArray[2] = Convert.ToDouble(NoProdfitChecker);
+                }
+            }
+            return CountersArray;
+        }
+        private void PrepareCountersText()
+        {
+            TotalProducts.Text = ArrayCounter[0].ToString();
+            TotalCompanies.Text = ArrayCounter[1].ToString();
+            TotalProfits.Text = ArrayCounter[2].ToString();
         }
         private void Email_Click(object sender, RoutedEventArgs e)
         {
@@ -53,8 +91,7 @@ namespace DashBoardDB
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //label1.Content = DateTime.Today.ToString("M/d/yyyy");
-            //DataContext = new Viewmodelx();
+            PrepareCountersText();
         }
         private void MenuClick(object sender, RoutedEventArgs e)
         {
