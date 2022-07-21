@@ -14,7 +14,7 @@ namespace DashBoardDB
     {
         string[] AddType = new string[] { "Choose what you like to add", "Product", "Company", "Missing Order" };
         string[] RemoveType = new string[] { "Choose what you like to remove", "Product", "Company", "Order" };
-        Boolean addflag = false, AddChecker; //Add Checked used to check if the item has been added or not
+        Boolean addflag = false, Checker; //Checker used to check if the item has been added/removed or not
         Visibility Show = Visibility.Visible;
         Visibility hide = Visibility.Hidden;
         bool emailvalition;
@@ -161,8 +161,6 @@ namespace DashBoardDB
             {
                 productnameblock.Visibility = hide;
                 productnamebox.Visibility = hide;
-                productpfpriceblock.Text = "Email:";
-                productpfpriceblock.Margin = new Thickness(32, 4, 288, 18);
                 productpfpriceblock.Visibility = hide;
                 productpfbricebox.Visibility = hide;
                 PhoneNumber.Visibility = hide;
@@ -195,7 +193,6 @@ namespace DashBoardDB
                 ScrollBar.Visibility = hide;
                 ScrollBar.IsEnabled = false;
                 quantitybox.IsReadOnly = false;
-
             }
         }
         private void PrepareRemoveProdect()
@@ -341,18 +338,52 @@ namespace DashBoardDB
         private void Confirm_Click(object sender, RoutedEventArgs e)
         {
             if (addflag == true)
+            {
                 if (EditType.SelectedIndex == 1)
                 {
-                    AddChecker = managaDB.insertProduct(productnamebox.Text, TypeBox.SelectedItem.ToString(), CompanyBox.SelectedItem.ToString(),
+                    Checker = managaDB.insertProduct(productnamebox.Text, TypeBox.SelectedItem.ToString(), CompanyBox.SelectedItem.ToString(),
                         Convert.ToInt32(quantitybox.Text), Convert.ToDouble(productojbricebox.Text), Convert.ToDouble(productpfbricebox.Text), expdatepciker.SelectedDate.Value);
-                    if (AddChecker == true)
+                    if (Checker == true)
                         MessageBox.Show("Product has been added to the DB");
                     else
                         MessageBox.Show("There was an error adding the product to the DB");
                 }
-
-
-
+                if (EditType.SelectedIndex == 2)
+                {
+                    Checker = managaDB.InsertCompany(productnamebox.Text, productpfbricebox.Text, Convert.ToDouble(PhoneNumbox.Text));
+                    if (Checker == true)
+                        MessageBox.Show("Company has been added to the DB");
+                    else
+                        MessageBox.Show("There was an error adding the company to the DB (hint:maybe the name is wrong)");
+                }
+            }
+            else
+            {
+                if (EditType.SelectedIndex == 1)
+                {
+                    Checker = managaDB.DeleteRecord("products", "ProductName", productpfbricebox.Text);
+                    if (Checker == true)
+                        MessageBox.Show("Product has been removed from the DB");
+                    else
+                        MessageBox.Show("There was an error removeing the product from the DB");
+                }
+                if (EditType.SelectedIndex == 2)
+                {
+                    Checker = managaDB.DeleteRecord("companies", "CompanyName", productpfbricebox.Text);
+                    if (Checker == true)
+                        MessageBox.Show("Company has been removed from the DB");
+                    else
+                        MessageBox.Show("There was an error removeing the company from the DB (hint:maybe the name is wrong)");
+                }
+                if (EditType.SelectedIndex == 3)
+                {
+                    Checker = managaDB.DeleteRecord("orders", "idOrders", productpfbricebox.Text);
+                    if (Checker == true)
+                        MessageBox.Show("The order has been removed from the DB");
+                    else
+                        MessageBox.Show("There was an error removeing the order from the DB (hint:maybe the id is wrong)");
+                }
+            }
         }
     }
 }
