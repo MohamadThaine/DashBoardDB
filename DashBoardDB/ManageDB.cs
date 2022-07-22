@@ -22,7 +22,7 @@ namespace DashBoardDB
             int ProductTypeID = 0, CompanyID = 0;
             String SQLstatment;
             int RowAffected = 0;
-            SQLstatment = "SELECT idCompanies FROM companies WHERE CompanyName LIKE '%" + CompanyName + "%'";
+            SQLstatment = "SELECT idCompanies FROM companies WHERE CompanyName = '%" + CompanyName + "%'";
             using (cmd = new MySqlCommand(SQLstatment, connection))
             {
                 var CompanyDontExistChecker = cmd.ExecuteScalar();
@@ -31,7 +31,7 @@ namespace DashBoardDB
                 else
                     return false;
             }
-            SQLstatment = "SELECT idProductTypes FROM producttypes WHERE ProductTypesName LIKE '%" + ProductTypeName + "%'";
+            SQLstatment = "SELECT idProductTypes FROM producttypes WHERE ProductTypesName = '%" + ProductTypeName + "%'";
             using (cmd = new MySqlCommand(SQLstatment, connection))
             {
                 var TypeDontExistChecker = cmd.ExecuteScalar();
@@ -82,7 +82,7 @@ namespace DashBoardDB
         {
             String SQLstatemnt = "";
             if (TableName != "orders")
-                SQLstatemnt = "DELETE FROM " + TableName + " WHERE " + ColumnName + " LIKE '%" + ColumValue + "%'";
+                SQLstatemnt = "DELETE FROM " + TableName + " WHERE " + ColumnName + " = '%" + ColumValue + "%'";
             else
                 SQLstatemnt = "DELETE FROM " + TableName + " WHERE (`" + ColumnName + "` = '" + ColumValue + "')";
             int DeleteChecker = 0;
@@ -151,7 +151,7 @@ namespace DashBoardDB
         public Double GetProductPriceWithQuantity(String ProductName ,int Quantity)
         {
             Double TotalPrice = 0;// = ProfitPrice*Quantity
-            String SQLstatemnt = "SELECT ProductProfitPrice FROM `products` WHERE ProductName LIKE '%" + ProductName + "%'";
+            String SQLstatemnt = "SELECT ProductProfitPrice FROM `products` WHERE ProductName = '" + ProductName + "'";
             using (cmd = new MySqlCommand(SQLstatemnt, connection))
             {
                 var ProductNotExist = cmd.ExecuteScalar();
