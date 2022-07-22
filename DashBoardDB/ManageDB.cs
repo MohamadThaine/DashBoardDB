@@ -74,6 +74,10 @@ namespace DashBoardDB
                 return false;
             return true;
         }
+        public bool InsertOrder(List<String> ProductNames, List<int> ProductQuanties, Double TotalProfitPrice , DateTime OrderDate)
+        {
+            return true;
+        }
         public bool DeleteRecord(String TableName, String ColumnName, String ColumValue)
         {
             String SQLstatemnt = "";
@@ -143,6 +147,19 @@ namespace DashBoardDB
                 reader.Close();
             }
             return CompanyName;
+        }
+        public Double GetProductPriceWithQuantity(String ProductName ,int Quantity)
+        {
+            Double TotalPrice = 0;// = ProfitPrice*Quantity
+            String SQLstatemnt = "SELECT ProductProfitPrice FROM `products` WHERE ProductName LIKE '%" + ProductName + "%'";
+            using (cmd = new MySqlCommand(SQLstatemnt, connection))
+            {
+                var ProductNotExist = cmd.ExecuteScalar();
+                if (ProductNotExist is not DBNull)
+                    TotalPrice = Convert.ToDouble(ProductNotExist);
+            }
+            TotalPrice *= Quantity;
+            return TotalPrice;
         }
     }
 }
