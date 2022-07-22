@@ -21,6 +21,10 @@ namespace DashBoardDB
         ManageDB managaDB = new();
         List<String> TypesList = new List<String>();
         List<String> CompaniesList = new List<String>();
+        List<String> MissingOrderNames = new List<String>();
+        List<int> MissingOrderQuanties = new List<int>();
+        String MissingOrderProductName = "";
+        Double MissingOrderTotalPrice = 0;
         public AddRemoveEdIt()
         {
             InitializeComponent();
@@ -174,22 +178,39 @@ namespace DashBoardDB
                 return;
             if (EditType.SelectedIndex == 3)
             {
-                productnameblock.Margin = new Thickness(15, 2, 337, 20);
-                productnameblock.Text = "Products:";
-                productnameblock.Visibility = Show;
-                productnamebox.Visibility = Show;
+                MissingOrderGrid.IsEnabled = true;
+                OrderProductNameBlock.IsEnabled = true;
+                OrderProductNameBox.IsEnabled = true;
+                OrderProductQuantityBlock.IsEnabled = true;
+                OrderProductQuantityBox.IsEnabled = true;
+                OrderProductNameBlock.Visibility = Show;
+                OrderProductNameBox.Visibility = Show;
+                OrderProductQuantityBlock.Visibility = Show;
+                OrderProductQuantityBox.Visibility = Show;
                 ScrollBar.Visibility = Show;
                 ScrollBar.IsEnabled = true;
                 AddProductToOrderBlock.Visibility = Show;
+                ProductNameAndQuantityBlock.Visibility = Show;
                 quantityblock.Text = "Price";
                 quantityblock.Visibility = Show;
                 quantitybox.Visibility = Show;
+                quantitybox.Text = "";
                 quantitybox.IsReadOnly = true;
                 Confirm.Visibility = Show;
             }
             else
             {
+                MissingOrderGrid.IsEnabled = false;
+                OrderProductNameBlock.IsEnabled = false;
+                OrderProductNameBox.IsEnabled = false;
+                OrderProductQuantityBlock.IsEnabled = false;
+                OrderProductQuantityBox.IsEnabled = false;
+                OrderProductNameBlock.Visibility = hide;
+                OrderProductNameBox.Visibility = hide;
+                OrderProductQuantityBlock.Visibility = hide;
+                OrderProductQuantityBox.Visibility = hide;
                 AddProductToOrderBlock.Visibility = hide;
+                ProductNameAndQuantityBlock.Visibility = hide;
                 ScrollBar.Visibility = hide;
                 ScrollBar.IsEnabled = false;
                 quantitybox.IsReadOnly = false;
@@ -295,9 +316,14 @@ namespace DashBoardDB
                 Regex regex = new Regex("[^0-9]+");
                 e.Handled = regex.IsMatch(e.Text);
             }
-
         }
-
+        private void missingorderquantitybox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            {
+                Regex regex = new Regex("[^0-9]+");
+                e.Handled = regex.IsMatch(e.Text);
+            }
+        }
         private void productpfbricebox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
@@ -323,16 +349,38 @@ namespace DashBoardDB
         }
         private void Enter_KeyDown(object sender, KeyEventArgs e)
         {
-            if (addflag == true)
+            
+            if (e.Key == Key.Return)
             {
-                if (EditType.SelectedIndex == 3)
+                if (OrderProductNameBox.Text == "")
                 {
-                    if (e.Key == Key.Return)
-                    {
-                        string ProductName = productnamebox.Text;
-                        AddProductToOrderBlock.Text += Environment.NewLine + productnamebox.Text;
-                    }
+                    MessageBox.Show("Please Enter The Product Name!");
+                    return;
                 }
+                int MissingOrderProductQuantity = 1;
+                Double MissingOrderTotalPriceForLastProduct = 0;
+                if (OrderProductNameBox.Text.Length > 5)
+                {
+                    MissingOrderProductName = OrderProductNameBox.Text.Substring(0, 5);
+                    MissingOrderProductName += "..";
+                }
+                else
+                    MissingOrderProductName = OrderProductNameBox.Text;
+                if (OrderProductQuantityBox.Text != "")
+                    MissingOrderProductQuantity = Convert.ToInt32(OrderProductQuantityBox.Text);
+                MissingOrderTotalPriceForLastProduct = managaDB.GetProductPriceWithQuantity(OrderProductNameBox.Text, MissingOrderProductQuantity);
+                if(MissingOrderTotalPriceForLastProduct == 0)
+                {
+                    MessageBox.Show("Product Deos Not exist in DB");
+                    return;
+                }
+                MissingOrderNames.Add(MissingOrderProductName);
+                MissingOrderQuanties.Add(MissingOrderProductQuantity);
+                ProductNameAndQuantityBlock.Text += Environment.NewLine + "      " + MissingOrderProductName + "                                                  " + MissingOrderProductQuantity.ToString();
+                OrderProductNameBox.Text = "";
+                OrderProductQuantityBox.Text = "";
+                MissingOrderTotalPrice += MissingOrderTotalPriceForLastProduct;
+                quantitybox.Text = MissingOrderTotalPrice.ToString();
             }
         }
         private void Confirm_Click(object sender, RoutedEventArgs e)
