@@ -242,7 +242,7 @@ namespace DashBoardDB
 
         public List<Double> GetEachTypeProfit(List<String> TypesNameList)
         {
-            String SQLstatemnt = "SELECT p.ProductsTypeID ,SUM(op.ProfitPrice),SUM(op.OGprice) " +
+            String SQLstatemnt = "SELECT SUM(op.ProfitPrice),SUM(op.OGprice) " +
                 "FROM `products` AS p JOIN `orderproducts` AS op ON p.idProducts = op.ProductID GROUP BY p.ProductsTypeID";
             MySqlDataReader reader;
             List<Double> TotalProfit = new List<Double>();
