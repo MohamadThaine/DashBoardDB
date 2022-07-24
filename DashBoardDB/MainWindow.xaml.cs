@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore.SkiaSharpView;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace DashBoardDB
@@ -8,14 +10,18 @@ namespace DashBoardDB
     [ObservableObject]
     public partial class MainWindow : Window
     {
+        public PieSeries<Double>[] PieSeries;//Public for live update
         Double appVersion = 0.2;
         Double LastVersion = 0;
         MySqlConnection connection = null;
         Double[] ArrayCounter = new Double[5];
         string DBError = "";
+        ManageDB DBmanager = new();
+        List<String> TypesNames = new List<string>();
+        List<Double> TypesProfit = new List<Double>();
         public MainWindow()
         {
-            ManageDB DBmanager = new();
+            InitializeComponent();
             connection = DBmanager.ConnectionToDB();
             if (connection != null)
             {
@@ -28,18 +34,18 @@ namespace DashBoardDB
                     DBError = "There was an error Connecting to the DB \n Error Code is: " + MySQLEX.HResult;
                     return;
                 }
-                ArrayCounter = GetProductNumber();
-                LastVersion = GetLastVersion();
             }
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            LastVersion = GetLastVersion();
             if (DBError != "")
             {
                 MessageBox.Show(DBError, "Error with the DataBase");
                 Application.Current.Shutdown();
             }
-            PrepareCountersText();
+            PrepareMainWindowData();
+            PreparePieChart(PieSeries);
         }
         private Double GetLastVersion()
         {
@@ -88,13 +94,25 @@ namespace DashBoardDB
             }
             return CountersArray;
         }
-        private void PrepareCountersText()
+        public void PrepareMainWindowData()//Changed To public for accessing update the DB to make it live with each update
         {
+            ArrayCounter = GetProductNumber();
             TotalProducts.Text = ArrayCounter[0].ToString();
             TotalCompanies.Text = ArrayCounter[1].ToString();
             TotalProfits.Text = ArrayCounter[2].ToString() + "$";
             OrdersToday.Text = ArrayCounter[3].ToString();
             ProfitToday.Text = ArrayCounter[4].ToString() + "$";
+        }
+        public void PreparePieChart(PieSeries<Double>[] pieSeries)//Public for live update
+        {
+            TypesNames = DBmanager.GetAllTypes();
+            TypesProfit = DBmanager.GetEachTypeProfit(TypesNames);
+            pieSeries = new PieSeries<Double>[TypesNames.Count];
+            for (int i = 0; i < TypesNames.Count; i++)
+            {
+                pieSeries[i] = new PieSeries<double> { Values = new List<double> { TypesProfit[i] }, InnerRadius = 50, Name = TypesNames[i] };
+            }
+            Pie.Series = pieSeries;
         }
         private void Email_Click(object sender, RoutedEventArgs e)
         {
@@ -108,7 +126,7 @@ namespace DashBoardDB
         }
         private void AddRemovebt(object sender, RoutedEventArgs e)
         {
-            AddRemoveEdIt addRemoveEdIt = new();
+            AddRemoveEdIt addRemoveEdIt = new(this);
             addRemoveEdIt.Show();
         }
         private void exit_Click(object sender, RoutedEventArgs e)

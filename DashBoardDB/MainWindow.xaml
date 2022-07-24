@@ -168,7 +168,7 @@
             <TextBlock Text="Profit by product type" TextWrapping="Wrap" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="35" Foreground="White"
                        FontFamily="fonts/#Dosis"/>
             <lvc:PieChart 
-                 Series="{Binding Path=Piechart.Series}" 
+                 
                  Grid.Row="2" 
                  Name="Pie"
                  tz:Transitionz.Opacity="{tz:OpacityParams From=0, To=1, Duration=200, TransitionOn=Visibility}"

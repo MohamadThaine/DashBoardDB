@@ -26,13 +26,16 @@ namespace DashBoardDB
         List<Double> MissingOrderPfPriceForEachProduct = new List<Double>();
         String MissingOrderProductName = "";
         Double MissingOrderTotalPrice = 0;
-        public AddRemoveEdIt()
+        private readonly MainWindow LiveUpdate;
+        public AddRemoveEdIt(MainWindow LiveUpdates)
         {
+            LiveUpdate = LiveUpdates;
             InitializeComponent();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
+            managaDB.CloseConnetion();
             Close();
         }
 
@@ -124,7 +127,7 @@ namespace DashBoardDB
                 productpfbricebox.Visibility = Show;
                 quantityblock.Visibility = Show;
                 quantitybox.Visibility = Show;
-                quantitybox.Text = "Quantity:";
+                quantityblock.Text = "Quantity:";
                 companyblock.Visibility = Show;
                 CompanyBox.Visibility = Show;
                 expdateblock.Visibility = Show;
@@ -365,7 +368,7 @@ namespace DashBoardDB
         }
         private void Enter_KeyDown(object sender, KeyEventArgs e)
         {
-            
+
             if (e.Key == Key.Return)
             {
                 if (OrderProductNameBox.Text == "")
@@ -385,12 +388,12 @@ namespace DashBoardDB
                 if (OrderProductQuantityBox.Text != "")
                     MissingOrderProductQuantity = Convert.ToInt32(OrderProductQuantityBox.Text);
                 MissingOrderTotalPriceForLastProduct = managaDB.GetProductPriceWithQuantity(OrderProductNameBox.Text, MissingOrderProductQuantity);
-                if(MissingOrderTotalPriceForLastProduct == 0)
+                if (MissingOrderTotalPriceForLastProduct == 0)
                 {
                     MessageBox.Show("Product Deos Not exist in DB");
                     return;
                 }
-                MissingOrderNames.Add(MissingOrderProductName);
+                MissingOrderNames.Add(OrderProductNameBox.Text);
                 MissingOrderQuanties.Add(MissingOrderProductQuantity);
                 MissingOrderPfPriceForEachProduct.Add(MissingOrderTotalPriceForLastProduct / MissingOrderProductQuantity);
                 ProductNameAndQuantityBlock.Text += Environment.NewLine + "      " + MissingOrderProductName + "                                                  " + MissingOrderProductQuantity.ToString();
@@ -406,7 +409,7 @@ namespace DashBoardDB
             {
                 if (EditType.SelectedIndex == 1)
                 {
-                    if (productnamebox.Text == "" || productpfbricebox.Text == "" || PhoneNumbox.Text == "" || TypeBox.SelectedItem.ToString() == "" ||
+                    if (productnamebox.Text == "" || productpfbricebox.Text == "" || TypeBox.SelectedItem.ToString() == "" ||
                         CompanyBox.SelectedItem.ToString() == "" || quantitybox.Text == "" || productojbricebox.Text == "" || expdatepciker.SelectedDate.Value.ToString() == "")
                     {
                         MessageBox.Show("Dont leave any TextBox empty!");
@@ -415,7 +418,10 @@ namespace DashBoardDB
                     Checker = managaDB.insertProduct(productnamebox.Text, TypeBox.SelectedItem.ToString(), CompanyBox.SelectedItem.ToString(),
                         Convert.ToInt32(quantitybox.Text), Convert.ToDouble(productojbricebox.Text), Convert.ToDouble(productpfbricebox.Text), expdatepciker.SelectedDate.Value);
                     if (Checker == true)
+                    {
                         MessageBox.Show("Product has been added to the DB");
+                        LiveUpdate.PrepareMainWindowData();
+                    }
                     else
                         MessageBox.Show("There was an error adding the product to the DB");
                 }
@@ -425,33 +431,48 @@ namespace DashBoardDB
                     {
                         MessageBox.Show("Dont leave any TextBox empty!");
                         return;
-                    }    
+                    }
                     Checker = managaDB.InsertCompany(productnamebox.Text, productpfbricebox.Text, Convert.ToDouble(PhoneNumbox.Text));
                     if (Checker == true)
+                    {
                         MessageBox.Show("Company has been added to the DB");
+                        LiveUpdate.PrepareMainWindowData();
+                    }
                     else
                         MessageBox.Show("There was an error adding the company to the DB (hint:maybe the name is wrong)");
                 }
                 else if (EditType.SelectedIndex == 3)
                 {
-                    if(quantitybox.Text == "")//if quantityBox is empty then they didnt any product to the list yet so check it alone is enough
+                    if (quantitybox.Text == "")//if quantityBox is empty then they didnt any product to the list yet so check it alone is enough
                     {
                         MessageBox.Show("Add product to the list first!");
                         return;
                     }
-                    else if(expdatepciker.SelectedDate.Value == null)
+                    else if (expdatepciker.SelectedDate.Value == null)
                     {
                         MessageBox.Show("Pick a date First!");
                         return;
                     }
-                    else if(expdatepciker.SelectedDate.Value.Date > DateTime.Today)
+                    else if (expdatepciker.SelectedDate.Value.Date > DateTime.Today)
                     {
                         MessageBox.Show("Date cant be after now!");//bad wording but idk how to say it!
                         return;
                     }
-                    Checker = managaDB.InsertOrder(MissingOrderNames, MissingOrderQuanties,MissingOrderPfPriceForEachProduct, MissingOrderTotalPrice, expdatepciker.SelectedDate.Value);
+                    Checker = managaDB.InsertOrder(MissingOrderNames, MissingOrderQuanties, MissingOrderPfPriceForEachProduct, MissingOrderTotalPrice, expdatepciker.SelectedDate.Value);
                     if (Checker == true)
+                    {
                         MessageBox.Show("Order has been added to the DB");
+                        MissingOrderNames.Clear();
+                        MissingOrderQuanties.Clear();
+                        MissingOrderPfPriceForEachProduct.Clear();
+                        MissingOrderTotalPrice = 0;
+                        quantitybox.Text = "";
+                        ProductNameAndQuantityBlock.Text = "     Product:                                            Quantity:   ";
+                        expdatepciker.SelectedDate = null;
+                        LiveUpdate.PrepareMainWindowData();
+                        LiveUpdate.PreparePieChart(LiveUpdate.PieSeries);
+                    }
+
                     else
                         MessageBox.Show("There was an error while adding the order to the DB");
                 }
@@ -460,14 +481,17 @@ namespace DashBoardDB
             {
                 if (EditType.SelectedIndex == 1)
                 {
-                    if(productpfbricebox.Text == "")
+                    if (productpfbricebox.Text == "")
                     {
                         MessageBox.Show("Dont leave the TextBox empty!");
                         return;
                     }
                     Checker = managaDB.DeleteRecord("products", "ProductName", productpfbricebox.Text);
                     if (Checker == true)
+                    {
                         MessageBox.Show("Product has been removed from the DB");
+                        LiveUpdate.PrepareMainWindowData();
+                    }
                     else
                         MessageBox.Show("There was an error removeing the product from the DB");
                 }
@@ -480,11 +504,14 @@ namespace DashBoardDB
                     }
                     Checker = managaDB.DeleteRecord("companies", "CompanyName", productpfbricebox.Text);
                     if (Checker == true)
+                    {
                         MessageBox.Show("Company has been removed from the DB");
+                        LiveUpdate.PrepareMainWindowData();
+                    }
                     else
                         MessageBox.Show("There was an error removeing the company from the DB (hint:maybe the name is wrong)");
                 }
-                else if(EditType.SelectedIndex == 3)
+                else if (EditType.SelectedIndex == 3)
                 {
                     if (productpfbricebox.Text == "")
                     {
@@ -493,7 +520,11 @@ namespace DashBoardDB
                     }
                     Checker = managaDB.DeleteRecord("orders", "idOrders", productpfbricebox.Text);
                     if (Checker == true)
+                    {
                         MessageBox.Show("The order has been removed from the DB");
+                        LiveUpdate.PrepareMainWindowData();
+                        LiveUpdate.PreparePieChart(LiveUpdate.PieSeries);
+                    }
                     else
                         MessageBox.Show("There was an error removeing the order from the DB (hint:maybe the id is wrong)");
                 }

@@ -22,7 +22,7 @@ namespace DashBoardDB
             int ProductTypeID = 0, CompanyID = 0;
             String SQLstatment;
             int RowAffected = 0;
-            SQLstatment = "SELECT idCompanies FROM companies WHERE CompanyName = '%" + CompanyName + "%'";
+            SQLstatment = "SELECT idCompanies FROM companies WHERE CompanyName = '" + CompanyName + "'";
             using (cmd = new MySqlCommand(SQLstatment, connection))
             {
                 var CompanyDontExistChecker = cmd.ExecuteScalar();
@@ -31,7 +31,7 @@ namespace DashBoardDB
                 else
                     return false;
             }
-            SQLstatment = "SELECT idProductTypes FROM producttypes WHERE ProductTypesName = '%" + ProductTypeName + "%'";
+            SQLstatment = "SELECT idProductTypes FROM producttypes WHERE ProductTypesName = '" + ProductTypeName + "'";
             using (cmd = new MySqlCommand(SQLstatment, connection))
             {
                 var TypeDontExistChecker = cmd.ExecuteScalar();
@@ -74,16 +74,16 @@ namespace DashBoardDB
                 return false;
             return true;
         }
-        public bool InsertOrder(List<String> ProductNames, List<int> ProductQuanties, List<Double> ProductsProfitPriceForEachItem,  Double TotalProfitPrice , DateTime OrderDate)
+        public bool InsertOrder(List<String> ProductNames, List<int> ProductQuanties, List<Double> ProductsProfitPriceForEachItem, Double TotalProfitPrice, DateTime OrderDate)
         {
             List<Double> ProductsOGPriceForEachItem = new List<double>();
             List<int> ProductIDS = new List<int>();
             int OrderID = 0;
             int ProductCount = ProductNames.Count;
-            Double EachProductTotalOGprice , EachProductTotalProfitPrice , TotalProductOGprice = 0, ProfitFromOrder;
+            Double EachProductTotalOGprice, EachProductTotalProfitPrice, TotalProductOGprice = 0, ProfitFromOrder;
             String SQLstatemnt = "INSERT INTO orders (`TotalPrice`, `ProfitFromOrder`, `OrderDate`) VALUES(@TotalPriceP, '0', @DateOfTheOrderP)";
             int RowAffected = 0;
-            using (cmd = new MySqlCommand(SQLstatemnt , connection))
+            using (cmd = new MySqlCommand(SQLstatemnt, connection))
             {
                 cmd.Parameters.AddWithValue("@TotalPriceP", TotalProfitPrice);
                 cmd.Parameters.AddWithValue("@DateOfTheOrderP", OrderDate);
@@ -96,12 +96,18 @@ namespace DashBoardDB
                 ProductsOGPriceForEachItem.Add(GetProductInfo("ProductsOGprice", ProductName));
                 ProductIDS.Add(Convert.ToInt32(GetProductInfo("idProducts", ProductName)));
             }
+            for (int i = 0; i < ProductCount; i++)
+            {
+                SQLstatemnt = "UPDATE `products` SET Quantity = Quantity - " + ProductQuanties[i] + " WHERE (`idProducts` = '" + ProductIDS[i] + "')";
+                using (cmd = new MySqlCommand(SQLstatemnt, connection))
+                    cmd.ExecuteNonQuery();
+            }
             SQLstatemnt = "SELECT idOrders FROM orders ORDER BY idOrders DESC LIMIT 1";
             using (cmd = new MySqlCommand(SQLstatemnt, connection))
             {
                 OrderID = Convert.ToInt32(cmd.ExecuteScalar());
             }
-            for(int i = 0; i < ProductCount; i++)
+            for (int i = 0; i < ProductCount; i++)
             {
                 EachProductTotalOGprice = ProductsOGPriceForEachItem[i] * ProductQuanties[i];
                 TotalProductOGprice += EachProductTotalOGprice;
@@ -124,7 +130,7 @@ namespace DashBoardDB
             SQLstatemnt = "UPDATE `orders` SET `ProfitFromOrder` = '" + ProfitFromOrder +
                 "' WHERE (`idOrders` = '" + OrderID + "')";
             using (cmd = new MySqlCommand(SQLstatemnt, connection))
-                cmd.ExecuteNonQuery();
+                RowAffected = cmd.ExecuteNonQuery();
             if (RowAffected == 0)
                 return false;
             return true;
@@ -132,15 +138,24 @@ namespace DashBoardDB
         public bool DeleteRecord(String TableName, String ColumnName, String ColumValue)
         {
             String SQLstatemnt = "";
+            int DeleteChecker = 0;
+            if (TableName == "orders")
+            {
+                {
+                    SQLstatemnt = "DELETE FROM `orderproducts` WHERE (`OrderID` = '" + ColumValue + "')";
+                    using (cmd = new MySqlCommand(SQLstatemnt, connection))
+                        cmd.ExecuteNonQuery();
+                }
+            }
             if (TableName != "orders")
                 SQLstatemnt = "DELETE FROM " + TableName + " WHERE " + ColumnName + " = '%" + ColumValue + "%'";
             else
                 SQLstatemnt = "DELETE FROM " + TableName + " WHERE (`" + ColumnName + "` = '" + ColumValue + "')";
-            int DeleteChecker = 0;
             using (cmd = new MySqlCommand(SQLstatemnt, connection))
             {
                 DeleteChecker = cmd.ExecuteNonQuery();//Return Number of row affected , if DeleteChecker == 0 then it failed , if 1 then it worked
             }
+
             if (DeleteChecker == 0)
                 return false;
             return true;
@@ -199,7 +214,7 @@ namespace DashBoardDB
             }
             return CompanyName;
         }
-        public Double GetProductPriceWithQuantity(String ProductName ,int Quantity)
+        public Double GetProductPriceWithQuantity(String ProductName, int Quantity)
         {
             Double TotalPrice = 0;// = ProfitPrice*Quantity
             String SQLstatemnt = "SELECT ProductProfitPrice FROM `products` WHERE ProductName = '" + ProductName + "'";
@@ -212,7 +227,7 @@ namespace DashBoardDB
             TotalPrice *= Quantity;
             return TotalPrice;
         }
-        public Double GetProductInfo(String ColomnName,String ProductName)//Work For everything expect date for now
+        public Double GetProductInfo(String ColomnName, String ProductName)//Work For everything expect date for now
         {
             Double Info = 0;
             String SQLstatemnt = "SELECT " + ColomnName + " FROM `products` WHERE ProductName = '" + ProductName + "'";
@@ -223,6 +238,96 @@ namespace DashBoardDB
                     Info = Convert.ToDouble(ProductNotExist);
             }
             return Info;
+        }
+
+        public List<Double> GetEachTypeProfit(List<String> TypesNameList)
+        {
+            List<Double> TypeProfit = new List<Double>();
+            List<Double> ProductProfitPirce = new List<Double>();
+            List<Double> ProductOrignalPrice = new List<Double>();
+            List<Double> TotalProfit = new List<Double>();
+            List<int> TypeID = new List<int>();
+            List<int> ProductsID = new List<int>();
+            MySqlDataReader reader;
+            String SQLstatment;
+            foreach (String TypeName in TypesNameList)
+            {
+                SQLstatment = "SELECT idProductTypes FROM `producttypes` WHERE ProductTypesName = '" + TypeName + "'";
+                using (cmd = new MySqlCommand(SQLstatment, connection))
+                {
+                    var CheckIfTypeDontExist = cmd.ExecuteScalar();
+                    if (CheckIfTypeDontExist is not DBNull)
+                        TypeID.Add(Convert.ToInt32(CheckIfTypeDontExist));
+                }
+            }
+            foreach (int ID in TypeID)
+            {
+                SQLstatment = "SELECT idProducts FROM `products` WHERE (`ProductsTypeID` = '" + ID + "')";
+                using (cmd = new MySqlCommand(SQLstatment, connection))
+                {
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ProductsID.Add(Convert.ToInt32(reader.GetInt32(0)));
+                    }
+                    reader.Close();
+                }
+            }
+            foreach (int ID in ProductsID)
+            {
+                SQLstatment = "SELECT SUM(ProfitPrice),SUM(OGprice)  FROM `orderproducts` WHERE (`ProductID` = '" + ID + "')";
+                using (cmd = new MySqlCommand(SQLstatment, connection))
+                {
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        try
+                        {
+                            ProductProfitPirce.Add(reader.GetDouble(0));
+                            ProductOrignalPrice.Add(reader.GetDouble(1));
+                        }
+                        catch (System.Data.SqlTypes.SqlNullValueException MYSQLEX)
+                        {
+                            ProductProfitPirce.Add(0);
+                            ProductOrignalPrice.Add(0);
+                        }
+                    }
+                }
+                reader.Close();
+            }
+            for (int i = 0; i < ProductProfitPirce.Count; i++)
+                TotalProfit.Add(ProductProfitPirce[i] - ProductOrignalPrice[i]);
+            TypeID.Clear();//Removed To be filled Again;
+            foreach (int ID in ProductsID)
+            {
+                SQLstatment = "SELECT ProductsTypeID FROM `products` WHERE (`idProducts` = '" + ID + "')";
+                using (cmd = new MySqlCommand(SQLstatment, connection))
+                    TypeID.Add(Convert.ToInt32(cmd.ExecuteScalar()));
+            }
+            SQLstatment = "UPDATE `producttypes` SET TypeProfitThisWeek = 0";
+            using (cmd = new MySqlCommand(SQLstatment, connection))
+                cmd.ExecuteNonQuery();
+            for (int i = 0; i < TypeID.Count; i++)
+            {
+                SQLstatment = "UPDATE `producttypes` SET TypeProfitThisWeek = TypeProfitThisWeek + " + TotalProfit[i] + " WHERE (`idProductTypes` = '" + TypeID[i] + "')";
+                using (cmd = new MySqlCommand(SQLstatment, connection))
+                    cmd.ExecuteNonQuery();
+            }
+            foreach (String TypeName in TypesNameList)
+            {
+                SQLstatment = "SELECT TypeProfitThisWeek FROM `producttypes` WHERE ProductTypesName = '" + TypeName + "'";
+                using (cmd = new MySqlCommand(SQLstatment, connection))
+                    TypeProfit.Add(Convert.ToDouble(cmd.ExecuteScalar()));
+            }
+            return TypeProfit;
+        }
+        public void CloseConnetion()
+        {
+            connection.Close();
+            if (connection.State != System.Data.ConnectionState.Closed)
+            {
+                CloseConnetion();
+            }
         }
     }
 }
