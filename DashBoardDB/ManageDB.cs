@@ -242,84 +242,23 @@ namespace DashBoardDB
 
         public List<Double> GetEachTypeProfit(List<String> TypesNameList)
         {
-            List<Double> TypeProfit = new List<Double>();
-            List<Double> ProductProfitPirce = new List<Double>();
-            List<Double> ProductOrignalPrice = new List<Double>();
-            List<Double> TotalProfit = new List<Double>();
-            List<int> TypeID = new List<int>();
-            List<int> ProductsID = new List<int>();
+            String SQLstatemnt = "SELECT p.ProductsTypeID ,SUM(op.ProfitPrice),SUM(op.OGprice) " +
+                "FROM `products` AS p JOIN `orderproducts` AS op ON p.idProducts = op.ProductID GROUP BY p.ProductsTypeID";
             MySqlDataReader reader;
-            String SQLstatment;
-            foreach (String TypeName in TypesNameList)
+            List<Double> TotalProfit = new List<Double>();
+            using (cmd = new MySqlCommand(SQLstatemnt, connection))
             {
-                SQLstatment = "SELECT idProductTypes FROM `producttypes` WHERE ProductTypesName = '" + TypeName + "'";
-                using (cmd = new MySqlCommand(SQLstatment, connection))
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    var CheckIfTypeDontExist = cmd.ExecuteScalar();
-                    if (CheckIfTypeDontExist is not DBNull)
-                        TypeID.Add(Convert.ToInt32(CheckIfTypeDontExist));
+                    TotalProfit.Add(reader.GetDouble(1) - reader.GetDouble(2));
                 }
             }
-            foreach (int ID in TypeID)
+            for (int i = 0; i < TypesNameList.Count; i++)
             {
-                SQLstatment = "SELECT idProducts FROM `products` WHERE (`ProductsTypeID` = '" + ID + "')";
-                using (cmd = new MySqlCommand(SQLstatment, connection))
-                {
-                    reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        ProductsID.Add(Convert.ToInt32(reader.GetInt32(0)));
-                    }
-                    reader.Close();
-                }
+                SQLstatemnt = " UPDATE `producttypes` SET TypeProfit = " + TotalProfit[i] + " WHERE ProductTypesName = '" + TypesNameList[i] + "'";
             }
-            foreach (int ID in ProductsID)
-            {
-                SQLstatment = "SELECT SUM(ProfitPrice),SUM(OGprice)  FROM `orderproducts` WHERE (`ProductID` = '" + ID + "')";
-                using (cmd = new MySqlCommand(SQLstatment, connection))
-                {
-                    reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        try
-                        {
-                            ProductProfitPirce.Add(reader.GetDouble(0));
-                            ProductOrignalPrice.Add(reader.GetDouble(1));
-                        }
-                        catch (System.Data.SqlTypes.SqlNullValueException MYSQLEX)
-                        {
-                            ProductProfitPirce.Add(0);
-                            ProductOrignalPrice.Add(0);
-                        }
-                    }
-                }
-                reader.Close();
-            }
-            for (int i = 0; i < ProductProfitPirce.Count; i++)
-                TotalProfit.Add(ProductProfitPirce[i] - ProductOrignalPrice[i]);
-            TypeID.Clear();//Removed To be filled Again;
-            foreach (int ID in ProductsID)
-            {
-                SQLstatment = "SELECT ProductsTypeID FROM `products` WHERE (`idProducts` = '" + ID + "')";
-                using (cmd = new MySqlCommand(SQLstatment, connection))
-                    TypeID.Add(Convert.ToInt32(cmd.ExecuteScalar()));
-            }
-            SQLstatment = "UPDATE `producttypes` SET TypeProfitThisWeek = 0";
-            using (cmd = new MySqlCommand(SQLstatment, connection))
-                cmd.ExecuteNonQuery();
-            for (int i = 0; i < TypeID.Count; i++)
-            {
-                SQLstatment = "UPDATE `producttypes` SET TypeProfitThisWeek = TypeProfitThisWeek + " + TotalProfit[i] + " WHERE (`idProductTypes` = '" + TypeID[i] + "')";
-                using (cmd = new MySqlCommand(SQLstatment, connection))
-                    cmd.ExecuteNonQuery();
-            }
-            foreach (String TypeName in TypesNameList)
-            {
-                SQLstatment = "SELECT TypeProfitThisWeek FROM `producttypes` WHERE ProductTypesName = '" + TypeName + "'";
-                using (cmd = new MySqlCommand(SQLstatment, connection))
-                    TypeProfit.Add(Convert.ToDouble(cmd.ExecuteScalar()));
-            }
-            return TypeProfit;
+            return TotalProfit;
         }
         public void CloseConnetion()
         {
