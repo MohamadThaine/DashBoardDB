@@ -251,7 +251,7 @@ namespace DashBoardDB
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    TotalProfit.Add(reader.GetDouble(1) - reader.GetDouble(2));
+                    TotalProfit.Add(reader.GetDouble(0) - reader.GetDouble(1));
                 }
             }
             for (int i = 0; i < TypesNameList.Count; i++)
