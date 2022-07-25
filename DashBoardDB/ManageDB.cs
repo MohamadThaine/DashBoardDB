@@ -240,9 +240,9 @@ namespace DashBoardDB
             return Info;
         }
 
-        public List<Double> GetEachTypeProfit(List<String> TypesNameList)
+        public List<Double> GetAndUpdateEachTypeProfit(List<String> TypesNameList)
         {
-            String SQLstatemnt = "SELECT SUM(op.ProfitPrice),SUM(op.OGprice) " +
+            String SQLstatemnt = "SELECT  SUM(op.ProfitPrice - op.OGprice) " +
                 "FROM `products` AS p JOIN `orderproducts` AS op ON p.idProducts = op.ProductID GROUP BY p.ProductsTypeID";
             MySqlDataReader reader;
             List<Double> TotalProfit = new List<Double>();
@@ -251,8 +251,9 @@ namespace DashBoardDB
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    TotalProfit.Add(reader.GetDouble(0) - reader.GetDouble(1));
+                    TotalProfit.Add(reader.GetDouble(0));
                 }
+                reader.Close();
             }
             for (int i = 0; i < TypesNameList.Count; i++)
             {

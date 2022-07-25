@@ -22,6 +22,7 @@ namespace DashBoardDB
         public MainWindow()
         {
             InitializeComponent();
+            PrepareSizeOfMainWindow();
             connection = DBmanager.ConnectionToDB();
             if (connection != null)
             {
@@ -55,6 +56,39 @@ namespace DashBoardDB
             using (cmd = new MySqlCommand(GetLastVersionFromDB, connection))
                 LastVersion = Convert.ToDouble(cmd.ExecuteScalar());
             return LastVersion;
+        }
+        public void PrepareSizeOfMainWindow()
+        {
+            double Height = 0;
+            Double Width = 0;
+            if (SystemParameters.PrimaryScreenHeight < 1080 || SystemParameters.PrimaryScreenWidth < 1920)//for anything bellow fullhd
+            {
+                Height = SystemParameters.PrimaryScreenHeight *0.90 ;
+                Width = SystemParameters.PrimaryScreenWidth * 0.90;
+                Pie.Height = Height * 0.35;
+            }
+            else if(SystemParameters.PrimaryScreenHeight < 1440 || SystemParameters.PrimaryScreenWidth < 2560)//for anything below 2k
+            {
+                Height = SystemParameters.PrimaryScreenHeight * 0.77;
+                Width = SystemParameters.PrimaryScreenWidth * 0.55;
+                Pie.Height = Height * 0.48;
+            }
+            else //for 2k and above
+            {
+                Height = SystemParameters.PrimaryScreenHeight * 0.67;
+                Width = SystemParameters.PrimaryScreenWidth * 0.5;
+                Pie.Height = Height * 0.48;
+            }
+            this.Height = Height;
+            this.Width = Width;
+            DBimage.Height = Height * 0.11;
+            PDFimage.Height = DBimage.Height;
+            Emailimage.Height = PDFimage.Height;
+            CompaniesIMG.Height = Height * 0.0841;
+            PordouctIMG.Height = CompaniesIMG.Height;
+            Profit2IMG.Height = PordouctIMG.Height;
+            MovingChart.Width = Width * 0.42;
+
         }
         private Double[] GetProductNumber()
         {
@@ -106,7 +140,7 @@ namespace DashBoardDB
         public void PreparePieChart(PieSeries<Double>[] pieSeries)//Public for live update
         {
             TypesNames = DBmanager.GetAllTypes();
-            TypesProfit = DBmanager.GetEachTypeProfit(TypesNames);
+            TypesProfit = DBmanager.GetAndUpdateEachTypeProfit(TypesNames);
             pieSeries = new PieSeries<Double>[TypesNames.Count];
             for (int i = 0; i < TypesNames.Count; i++)
             {
