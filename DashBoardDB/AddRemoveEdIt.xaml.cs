@@ -410,7 +410,7 @@ namespace DashBoardDB
                 if (EditType.SelectedIndex == 1)
                 {
                     if (productnamebox.Text == "" || productpfbricebox.Text == "" || TypeBox.SelectedItem.ToString() == "" ||
-                        CompanyBox.SelectedItem.ToString() == "" || quantitybox.Text == "" || productojbricebox.Text == "" || expdatepciker.SelectedDate.Value.ToString() == "")
+                        CompanyBox.SelectedItem == null || quantitybox.Text == "" || productojbricebox.Text == "" || expdatepciker.SelectedDate.Value == null)
                     {
                         MessageBox.Show("Dont leave any TextBox empty!");
                         return;
