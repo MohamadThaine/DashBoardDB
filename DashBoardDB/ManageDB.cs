@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 namespace DashBoardDB
 {
     class ManageDB
@@ -52,7 +52,6 @@ namespace DashBoardDB
                 cmd.Parameters.AddWithValue("@ProfitPriceP", ProductPfprice);
                 cmd.Parameters.AddWithValue("@ExpDateP", EXPdate);
                 RowAffected = cmd.ExecuteNonQuery();
-
             }
             if (RowAffected == 0)
                 return false;
@@ -240,26 +239,101 @@ namespace DashBoardDB
             return Info;
         }
 
-        public List<Double> GetAndUpdateEachTypeProfit(List<String> TypesNameList)
+        public void GetAndUpdateEachTypeProfit(List<String> TypesName, List<Double> TotalProfit)
         {
-            String SQLstatemnt = "SELECT  SUM(op.ProfitPrice - op.OGprice) " +
+            String SQLstatemnt = "SELECT  p.ProductsTypeID, SUM(op.ProfitPrice - op.OGprice) " +
                 "FROM `products` AS p JOIN `orderproducts` AS op ON p.idProducts = op.ProductID GROUP BY p.ProductsTypeID";
             MySqlDataReader reader;
-            List<Double> TotalProfit = new List<Double>();
+            List<int> TypeID = new List<int>();
             using (cmd = new MySqlCommand(SQLstatemnt, connection))
             {
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    TotalProfit.Add(reader.GetDouble(0));
+                    TypeID.Add(reader.GetInt32(0));
+                    TotalProfit.Add(reader.GetDouble(1));
                 }
                 reader.Close();
             }
-            for (int i = 0; i < TypesNameList.Count; i++)
+            for (int i = 0; i < TotalProfit.Count; i++)
             {
-                SQLstatemnt = " UPDATE `producttypes` SET TypeProfit = " + TotalProfit[i] + " WHERE ProductTypesName = '" + TypesNameList[i] + "'";
+                SQLstatemnt = " UPDATE `producttypes` SET TypeProfit = " + TotalProfit[i] + " WHERE (`idProductTypes` = '" + TypeID[i] + "')";
+                using (cmd = new MySqlCommand(SQLstatemnt, connection))
+                    cmd.ExecuteNonQuery();
+                SQLstatemnt = "SELECT ProductTypesName FROM producttypes WHERE (`idProductTypes` = '" + TypeID[i] + "')";
+                using (cmd = new MySqlCommand(SQLstatemnt, connection))
+                    TypesName.Add(cmd.ExecuteScalar().ToString());
             }
-            return TotalProfit;
+        }
+        public void GetEachTypeProfitWithDate(List<String> TypesName, List<Double> TotalProfit, String Date)
+        {
+            String SQLstatemnt;
+            if (Date == "0")
+                SQLstatemnt = "SELECT idOrders FROM orders";
+            else
+                SQLstatemnt = "SELECT idOrders FROM orders WHERE DATE(OrderDate) > CURRENT_DATE() - interval " + Date + " day";
+            List<int> OrdersID = new List<int>();
+            MySqlDataReader reader;
+            int CurrentTypeID = -1;//-1 because there is no -1 id
+            Double SumProfit = 0;
+            bool FirstTimeFlag = false;
+            using (cmd = new MySqlCommand(SQLstatemnt, connection))
+            {
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    OrdersID.Add(reader.GetInt32(0));
+                reader.Close();
+            }
+            foreach (int ID in OrdersID)
+            {
+                SQLstatemnt = "SELECT p.ProductsTypeID, SUM(op.ProfitPrice - op.OGprice) FROM `orderproducts` AS op" +
+                    " INNER JOIN `products` AS p ON p.idProducts = op.ProductID WHERE op.OrderID = " + ID + " GROUP BY p.ProductsTypeID";
+                using (cmd = new MySqlCommand(SQLstatemnt, connection))
+                {
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        if (FirstTimeFlag == false)
+                        {
+                            CurrentTypeID = reader.GetInt32(0);
+                            FirstTimeFlag = true;
+                        }
+                        if (reader.GetInt32(0) != CurrentTypeID)
+                        {
+                            SQLstatemnt = "SELECT ProductTypesName FROM producttypes WHERE (`idProductTypes` = '" + CurrentTypeID + "')";
+                            CurrentTypeID = reader.GetInt32(0);
+                            TotalProfit.Add(SumProfit);
+                            SumProfit = 0;
+                            SumProfit += reader.GetDouble(1);
+                            reader.Close();
+                            using (cmd = new MySqlCommand(SQLstatemnt, connection))
+                                TypesName.Add(cmd.ExecuteScalar().ToString());
+                            if (ID == OrdersID.Last())
+                            {
+                                SQLstatemnt = "SELECT ProductTypesName FROM producttypes WHERE (`idProductTypes` = '" + CurrentTypeID + "')";
+                                using (cmd = new MySqlCommand(SQLstatemnt, connection))
+                                    TypesName.Add(cmd.ExecuteScalar().ToString());
+                                TotalProfit.Add(SumProfit);
+                            }
+                            break;
+                        }
+                        SumProfit += reader.GetDouble(1);
+                    }
+                    reader.Close();
+                }
+            }
+            for (int i = 0; i < TotalProfit.Count; i++)
+                for (int j = i + 1; i < TotalProfit.Count; j++)
+                {
+                    if (j > TotalProfit.Count - 1 || i > TotalProfit.Count - 1)
+                        break;
+                    if (TypesName[i] == TypesName[j])
+                    {
+                        TotalProfit[i] += TotalProfit[j];
+                        TotalProfit.RemoveAt(j);
+                        TypesName.RemoveAt(j);
+                    }
+                }
         }
         public void CloseConnetion()
         {

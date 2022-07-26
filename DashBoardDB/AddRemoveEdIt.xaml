@@ -255,6 +255,9 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
+
+
+                
                 <Button Style="{DynamicResource RoundedButton}" Name="Add" Content="Add" FontSize="20" Background="#FE6584" FontFamily="fonts/#Dosis" MaxHeight="30" MaxWidth="150" Click="Add_Click"/>
                 <Button Style="{DynamicResource RoundedButton}" Name="Remove" Content="Remove" FontSize="20" Background="#FE6584" FontFamily="fonts/#Dosis" MaxHeight="30" MaxWidth="150" Grid.Column="1" Click="Remove_Click"/>
             </Grid>
@@ -276,7 +279,6 @@
                 <TextBlock Name="OrderProductQuantityBlock" IsEnabled="False" Visibility="Hidden" Text="Quantity:" Margin="268,50,-268,27" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White" Height="25" Grid.RowSpan="2"/>
                 <TextBox Name="OrderProductQuantityBox" IsEnabled="False" Visibility="Hidden" Grid.Row="1" MaxHeight="30" MaxWidth="175" Background="White" Margin="97,6,-97,45" Grid.RowSpan="2" FontSize="20" FontFamily="fonts/#Dosis" KeyDown="Enter_KeyDown" PreviewTextInput="missingorderquantitybox_PreviewTextInput"></TextBox>
                 <TextBox Name="productnamebox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2"  FontSize="20" FontFamily="fonts/#Dosis"/>
-
                 <TextBlock Grid.Row="1" Name="productnameblock" Text="Name:" TextWrapping="Wrap" Margin="26,2,290,20" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White" Height="25" />
                 <TextBlock Grid.Row="2" Name="ProductTypeBlock" Text="Type:" TextWrapping="Wrap" Margin="26,2,290,20" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White" Height="25" />
                 <ComboBox Grid.Row="2" Name="TypeBox" Width="250" Height="30" VerticalAlignment="Top" FontFamily="fonts/#Dosis" BorderBrush="{x:Null}" IsEditable="True">

@@ -59,15 +59,15 @@ namespace DashBoardDB
         }
         public void PrepareSizeOfMainWindow()
         {
-            double Height = 0;
+            Double Height = 0;
             Double Width = 0;
             if (SystemParameters.PrimaryScreenHeight < 1080 || SystemParameters.PrimaryScreenWidth < 1920)//for anything bellow fullhd
             {
-                Height = SystemParameters.PrimaryScreenHeight *0.90 ;
+                Height = SystemParameters.PrimaryScreenHeight * 0.90;
                 Width = SystemParameters.PrimaryScreenWidth * 0.90;
                 Pie.Height = Height * 0.35;
             }
-            else if(SystemParameters.PrimaryScreenHeight < 1440 || SystemParameters.PrimaryScreenWidth < 2560)//for anything below 2k
+            else if (SystemParameters.PrimaryScreenHeight < 1440 || SystemParameters.PrimaryScreenWidth < 2560)//for anything below 2k and fullhd and above
             {
                 Height = SystemParameters.PrimaryScreenHeight * 0.77;
                 Width = SystemParameters.PrimaryScreenWidth * 0.55;
@@ -139,13 +139,36 @@ namespace DashBoardDB
         }
         public void PreparePieChart(PieSeries<Double>[] pieSeries)//Public for live update
         {
-            TypesNames = DBmanager.GetAllTypes();
-            TypesProfit = DBmanager.GetAndUpdateEachTypeProfit(TypesNames);
-            pieSeries = new PieSeries<Double>[TypesNames.Count];
-            for (int i = 0; i < TypesNames.Count; i++)
+            TypesNames.Clear();
+            TypesProfit.Clear();
+            DBmanager.GetAndUpdateEachTypeProfit(TypesNames, TypesProfit);
+            pieSeries = new PieSeries<Double>[TypesProfit.Count];
+            for (int i = 0; i < TypesProfit.Count; i++)
             {
                 pieSeries[i] = new PieSeries<double> { Values = new List<double> { TypesProfit[i] }, InnerRadius = 50, Name = TypesNames[i] };
             }
+            Pie.Series = pieSeries;
+        }
+        private void PreparePieChartWithDate(object sender, RoutedEventArgs e)
+        {
+            TypesNames.Clear();
+            TypesProfit.Clear();
+            if (PieCharDatatLast7days.IsChecked == true)
+                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, "7");
+            else if (PieCharDatatLast30days.IsChecked == true)
+                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, "30");
+            else if (PieCharDatatLastYear.IsChecked == true)
+                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, "365");
+            else
+                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, "0");
+            if (TypesProfit.Count == 0)
+            {
+                MessageBox.Show("No Profit at all from the selected date!");
+                return;
+            }
+            PieSeries<Double>[] pieSeries = new PieSeries<Double>[TypesProfit.Count];
+            for (int i = 0; i < TypesProfit.Count; i++)
+                pieSeries[i] = new PieSeries<double> { Values = new List<double> { TypesProfit[i] }, InnerRadius = 50, Name = TypesNames[i] };
             Pie.Series = pieSeries;
         }
         private void Email_Click(object sender, RoutedEventArgs e)

@@ -6,7 +6,7 @@
         xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
         xmlns:local="clr-namespace:DashBoardDB"
         mc:Ignorable="d"
-        Title="MainWindow"
+        Title="MainWindow" Height="964.8" Width="1280"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
@@ -169,9 +169,17 @@
             <lvc:PieChart 
                  Grid.Row="1" 
                  Name="Pie"
-                 tz:Transitionz.Opacity="{tz:OpacityParams From=0, To=1, Duration=200, TransitionOn=Visibility}"
-                 tz:Transitionz.Translate="{tz:TranslateParams From='10,0', To='0,0', Duration=200, TransitionOn=Visibility}"
-                 tz:Transitionz.Visibility="{Binding ElementName=helper, Path=IsEnabled, Converter={StaticResource b2vc}}" Margin="2,36,-2,8" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+                 Height="462.104"
+                    
+                 Margin="2,36,-2,8" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+            <RadioButton Name="PieCharDatatLast7days" Grid.Row="2" Height="20" Width="80" Style="{StaticResource {x:Type ToggleButton}}" Content="Last 7 days" 
+                         VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="23,0,0,3" Background="#FE6584" Checked="PreparePieChartWithDate"/>
+            <RadioButton Name="PieCharDatatLast30days" Grid.Row="2" Height="20" Width="80" Style="{StaticResource {x:Type ToggleButton}}" Content="Last 30 days" 
+                         VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="111,0,0,3" Background="#FE6584" Checked="PreparePieChartWithDate"/>
+            <RadioButton Name="PieCharDatatLastYear" Grid.Row="2" Height="20" Width="80" Style="{StaticResource {x:Type ToggleButton}}" Content="Last year" 
+                         VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="200,0,0,3" Background="#FE6584" Checked="PreparePieChartWithDate"/>
+            <RadioButton Name="PieCharDatatLifeTime" Grid.Row="2" Height="20" Width="80" Style="{StaticResource {x:Type ToggleButton}}" Content="Life Time" 
+                         VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,70,3" Background="#FE6584" Checked="PreparePieChartWithDate"/>
         </Grid>
         <Grid Background="#181735" Grid.Column="1" Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -192,10 +200,10 @@
                 TooltipPosition="Top"
                 Grid.Column="1"
                 ZoomMode="X"
+                Width="537.6"
                 tz:Transitionz.Opacity="{tz:OpacityParams From=0, To=1, Duration=200, TransitionOn=Visibility}"
                 tz:Transitionz.Translate="{tz:TranslateParams From='10,0', To='0,0', Duration=200, TransitionOn=Visibility}"
                 tz:Transitionz.Visibility="{Binding ElementName=helper, Path=IsEnabled, Converter={StaticResource b2vc}}" Margin="4,1,0,-1" HorizontalAlignment="Left"/>
-
 
         </Grid>
         <Grid Grid.Row="2" Grid.ColumnSpan="2" Background="#181735">
