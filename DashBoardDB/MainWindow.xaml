@@ -11,8 +11,7 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Loaded="Window_Loaded"
-        Icon="/images/dashboardicon.png"
-        xmlns:tz="http://schemas.abtsoftware.co.uk/transitionz">
+        Icon="/images/dashboardicon.png">
     <Window.Resources>
         <Style x:Key="NoGlow" TargetType="Button">
             <Setter Property="Template">
@@ -178,7 +177,7 @@
             <RadioButton Name="PieCharDatatLastYear" Grid.Row="2" Height="20" Width="80" Style="{StaticResource {x:Type ToggleButton}}" Content="Last year" 
                          VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="200,0,0,3" Background="#FE6584" Checked="PreparePieChartWithDate"/>
             <RadioButton Name="PieCharDatatLifeTime" Grid.Row="2" Height="20" Width="80" Style="{StaticResource {x:Type ToggleButton}}" Content="Life Time" 
-                         VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,70,3" Background="#FE6584" Checked="PreparePieChartWithDate"/>
+                         VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,70,3" Background="#FE6584" IsChecked="True" Checked="PreparePieChartWithDate"/>
         </Grid>
         <Grid Background="#181735" Grid.Column="1" Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -198,10 +197,7 @@
                 Series="{Binding Path=Viewmodelx.SeriesCollection}"
                 TooltipPosition="Top"
                 Grid.Column="1"
-                ZoomMode="X"
-                tz:Transitionz.Opacity="{tz:OpacityParams From=0, To=1, Duration=200, TransitionOn=Visibility}"
-                tz:Transitionz.Translate="{tz:TranslateParams From='10,0', To='0,0', Duration=200, TransitionOn=Visibility}"
-                tz:Transitionz.Visibility="{Binding ElementName=helper, Path=IsEnabled, Converter={StaticResource b2vc}}" Margin="4,1,0,-1" HorizontalAlignment="Left"/>
+                ZoomMode="X"/>
 
         </Grid>
         <Grid Grid.Row="2" Grid.ColumnSpan="2" Background="#181735">
@@ -273,7 +269,7 @@
                     </Grid>
                 </Grid>
             </Grid>
-            <lvc:CartesianChart Series="{Binding Path=Bars.Series}" Grid.Row="1" Grid.Column="2"></lvc:CartesianChart>
+            <lvc:CartesianChart Name="RowChart" Grid.Row="1" Grid.Column="2"></lvc:CartesianChart>
         </Grid>
         <Grid Grid.Column="2" Grid.Row="1" Grid.RowSpan="2" Background="#FF181735">
             <Grid.RowDefinitions>

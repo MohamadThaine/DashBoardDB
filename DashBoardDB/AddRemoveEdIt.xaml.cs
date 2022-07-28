@@ -470,7 +470,7 @@ namespace DashBoardDB
                         ProductNameAndQuantityBlock.Text = "     Product:                                            Quantity:   ";
                         expdatepciker.SelectedDate = null;
                         LiveUpdate.PrepareMainWindowData();
-                        LiveUpdate.PreparePieChart(LiveUpdate.PieSeries);
+                        LiveUpdate.PreparePieChartWithDate(this, e);
                     }
 
                     else
@@ -523,7 +523,7 @@ namespace DashBoardDB
                     {
                         MessageBox.Show("The order has been removed from the DB");
                         LiveUpdate.PrepareMainWindowData();
-                        LiveUpdate.PreparePieChart(LiveUpdate.PieSeries);
+                        LiveUpdate.PreparePieChartWithDate(this, e);
                     }
                     else
                         MessageBox.Show("There was an error removeing the order from the DB (hint:maybe the id is wrong)");

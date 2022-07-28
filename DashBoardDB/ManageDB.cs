@@ -11,6 +11,14 @@ namespace DashBoardDB
         public ManageDB()
         {
             ConnectionToDB();
+            try
+            {
+                connection.Open();
+            }
+            catch (MySqlException MYSQLEX)
+            {
+                //
+            }
         }
         public MySqlConnection ConnectionToDB()
         {
@@ -164,17 +172,6 @@ namespace DashBoardDB
             List<String> TypesName = new List<String>();
             MySqlDataReader reader;
             String SQLstatment = "SELECT ProductTypesName FROM producttypes";
-            if (connection.State == System.Data.ConnectionState.Closed)
-            {
-                try
-                {
-                    connection.Open();
-                }
-                catch (MySqlException MYSQLEX)
-                {
-                    //
-                }
-            }
             using (cmd = new MySqlCommand(SQLstatment, connection))
             {
                 reader = cmd.ExecuteReader();
@@ -191,17 +188,6 @@ namespace DashBoardDB
             List<String> CompanyName = new List<String>();
             MySqlDataReader reader;
             String SQLstatment = "SELECT CompanyName FROM companies";
-            if (connection.State == System.Data.ConnectionState.Closed)
-            {
-                try
-                {
-                    connection.Open();
-                }
-                catch (MySqlException MYSQLEX)
-                {
-                    //
-                }
-            }
             using (cmd = new MySqlCommand(SQLstatment, connection))
             {
                 reader = cmd.ExecuteReader();
@@ -239,12 +225,13 @@ namespace DashBoardDB
             return Info;
         }
 
-        public void GetAndUpdateEachTypeProfit(List<String> TypesName, List<Double> TotalProfit)
+        public void UpdateEachTypeProfit()
         {
+            List<Double> TotalProfit = new List<Double>();
+            List<int> TypeID = new List<int>();
             String SQLstatemnt = "SELECT  p.ProductsTypeID, SUM(op.ProfitPrice - op.OGprice) " +
                 "FROM `products` AS p JOIN `orderproducts` AS op ON p.idProducts = op.ProductID GROUP BY p.ProductsTypeID";
             MySqlDataReader reader;
-            List<int> TypeID = new List<int>();
             using (cmd = new MySqlCommand(SQLstatemnt, connection))
             {
                 reader = cmd.ExecuteReader();
@@ -260,9 +247,6 @@ namespace DashBoardDB
                 SQLstatemnt = " UPDATE `producttypes` SET TypeProfit = " + TotalProfit[i] + " WHERE (`idProductTypes` = '" + TypeID[i] + "')";
                 using (cmd = new MySqlCommand(SQLstatemnt, connection))
                     cmd.ExecuteNonQuery();
-                SQLstatemnt = "SELECT ProductTypesName FROM producttypes WHERE (`idProductTypes` = '" + TypeID[i] + "')";
-                using (cmd = new MySqlCommand(SQLstatemnt, connection))
-                    TypesName.Add(cmd.ExecuteScalar().ToString());
             }
         }
         public void GetEachTypeProfitWithDate(List<String> TypesName, List<Double> TotalProfit, String Date)
@@ -334,6 +318,28 @@ namespace DashBoardDB
                         TypesName.RemoveAt(j);
                     }
                 }
+        }
+        public void GetProductsSales(List<int> ProductsSales, List<String> ProductsNames , int ProductsNum)
+        {
+            String SqlStatemnt = "";
+            if(ProductsNum == 0)
+                SqlStatemnt = "SELECT p.ProductName, SUM(op.Quantity) FROM orderproducts AS op join products AS p " +
+                "ON p.idProducts = op.ProductID GROUP BY p.ProductName order by SUM(op.Quantity) DESC";
+            if(ProductsNum != 0)
+                SqlStatemnt = "SELECT p.ProductName, SUM(op.Quantity) FROM orderproducts AS op join products AS p " +
+                "ON p.idProducts = op.ProductID GROUP BY p.ProductName order by SUM(op.Quantity) DESC LIMIT " + ProductsNum;
+            MySqlDataReader reader;
+            using (cmd = new MySqlCommand(SqlStatemnt, connection))
+            {
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    ProductsNames.Add(reader.GetString(0));
+                    ProductsSales.Add(reader.GetInt32(1));
+                }
+                reader.Close();
+            }
+
         }
         public void CloseConnetion()
         {

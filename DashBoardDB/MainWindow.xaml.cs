@@ -10,7 +10,6 @@ namespace DashBoardDB
     [ObservableObject]
     public partial class MainWindow : Window
     {
-        public PieSeries<Double>[] PieSeries;//Public for live update
         Double appVersion = 0.2;
         Double LastVersion = 0;
         MySqlConnection connection = null;
@@ -19,6 +18,8 @@ namespace DashBoardDB
         ManageDB DBmanager = new();
         List<String> TypesNames = new List<string>();
         List<Double> TypesProfit = new List<Double>();
+        List<String> ProductsName = new List<string>();
+        List<int> ProductsSales = new List<int>();
         public MainWindow()
         {
             InitializeComponent();
@@ -36,6 +37,7 @@ namespace DashBoardDB
                     return;
                 }
             }
+            DBmanager.UpdateEachTypeProfit();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -46,7 +48,7 @@ namespace DashBoardDB
                 Application.Current.Shutdown();
             }
             PrepareMainWindowData();
-            PreparePieChart(PieSeries);
+            PrepareRowChart();
         }
         private Double GetLastVersion()
         {
@@ -88,7 +90,6 @@ namespace DashBoardDB
             PordouctIMG.Height = CompaniesIMG.Height;
             Profit2IMG.Height = PordouctIMG.Height;
             MovingChart.Width = Width * 0.42;
-
         }
         private Double[] GetProductNumber()
         {
@@ -137,19 +138,7 @@ namespace DashBoardDB
             OrdersToday.Text = ArrayCounter[3].ToString();
             ProfitToday.Text = ArrayCounter[4].ToString() + "$";
         }
-        public void PreparePieChart(PieSeries<Double>[] pieSeries)//Public for live update
-        {
-            TypesNames.Clear();
-            TypesProfit.Clear();
-            DBmanager.GetAndUpdateEachTypeProfit(TypesNames, TypesProfit);
-            pieSeries = new PieSeries<Double>[TypesProfit.Count];
-            for (int i = 0; i < TypesProfit.Count; i++)
-            {
-                pieSeries[i] = new PieSeries<double> { Values = new List<double> { TypesProfit[i] }, InnerRadius = 50, Name = TypesNames[i] };
-            }
-            Pie.Series = pieSeries;
-        }
-        private void PreparePieChartWithDate(object sender, RoutedEventArgs e)
+        public void PreparePieChartWithDate(object sender, RoutedEventArgs e)//public for live update
         {
             TypesNames.Clear();
             TypesProfit.Clear();
@@ -170,6 +159,14 @@ namespace DashBoardDB
             for (int i = 0; i < TypesProfit.Count; i++)
                 pieSeries[i] = new PieSeries<double> { Values = new List<double> { TypesProfit[i] }, InnerRadius = 50, Name = TypesNames[i] };
             Pie.Series = pieSeries;
+        }
+        private void PrepareRowChart()
+        {
+            DBmanager.GetProductsSales(ProductsSales, ProductsName , 9);
+            RowSeries<int>[] rowSeries = new RowSeries<int>[ProductsSales.Count];
+            for (int i = 0; i < ProductsSales.Count; i++)
+                rowSeries[i] = new RowSeries<int> { Values = new List<int> { ProductsSales[i] }, Name = ProductsName[i] };
+            RowChart.Series = rowSeries;
         }
         private void Email_Click(object sender, RoutedEventArgs e)
         {
