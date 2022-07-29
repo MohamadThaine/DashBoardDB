@@ -143,13 +143,13 @@ namespace DashBoardDB
             TypesNames.Clear();
             TypesProfit.Clear();
             if (PieCharDatatLast7days.IsChecked == true)
-                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, "7");
+                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, 7);
             else if (PieCharDatatLast30days.IsChecked == true)
-                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, "30");
+                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, 30);
             else if (PieCharDatatLastYear.IsChecked == true)
-                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, "365");
+                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, 365);
             else
-                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, "0");
+                DBmanager.GetEachTypeProfitWithDate(TypesNames, TypesProfit, 0);
             if (TypesProfit.Count == 0)
             {
                 MessageBox.Show("No Profit at all from the selected date!");
@@ -162,7 +162,7 @@ namespace DashBoardDB
         }
         private void PrepareRowChart()
         {
-            DBmanager.GetProductsSales(ProductsSales, ProductsName , 9);
+            DBmanager.GetProductsSales(ProductsName, ProductsSales , 9 , 0);
             RowSeries<int>[] rowSeries = new RowSeries<int>[ProductsSales.Count];
             for (int i = 0; i < ProductsSales.Count; i++)
                 rowSeries[i] = new RowSeries<int> { Values = new List<int> { ProductsSales[i] }, Name = ProductsName[i] };

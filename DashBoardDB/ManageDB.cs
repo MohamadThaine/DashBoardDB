@@ -249,25 +249,14 @@ namespace DashBoardDB
                     cmd.ExecuteNonQuery();
             }
         }
-        public void GetEachTypeProfitWithDate(List<String> TypesName, List<Double> TotalProfit, String Date)
+        public void GetEachTypeProfitWithDate(List<String> TypesName, List<Double> TotalProfit, int Date)
         {
             String SQLstatemnt;
-            if (Date == "0")
-                SQLstatemnt = "SELECT idOrders FROM orders";
-            else
-                SQLstatemnt = "SELECT idOrders FROM orders WHERE DATE(OrderDate) > CURRENT_DATE() - interval " + Date + " day";
-            List<int> OrdersID = new List<int>();
+            List<int> OrdersID = OrdersID = GetOrdersWithDate(Date);
             MySqlDataReader reader;
             int CurrentTypeID = -1;//-1 because there is no -1 id
             Double SumProfit = 0;
             bool FirstTimeFlag = false;
-            using (cmd = new MySqlCommand(SQLstatemnt, connection))
-            {
-                reader = cmd.ExecuteReader();
-                while (reader.Read())
-                    OrdersID.Add(reader.GetInt32(0));
-                reader.Close();
-            }
             foreach (int ID in OrdersID)
             {
                 SQLstatemnt = "SELECT p.ProductsTypeID, SUM(op.ProfitPrice - op.OGprice) FROM `orderproducts` AS op" +
@@ -316,30 +305,105 @@ namespace DashBoardDB
                         TotalProfit[i] += TotalProfit[j];
                         TotalProfit.RemoveAt(j);
                         TypesName.RemoveAt(j);
+                        j--;
                     }
                 }
         }
-        public void GetProductsSales(List<int> ProductsSales, List<String> ProductsNames , int ProductsNum)
+        public List<int> GetOrdersWithDate(int Date)
         {
+            List<int> OrdersIDs = new List<int>();
+            String SQLstatemnt = "";
+            if (Date == 0)
+                SQLstatemnt = "SELECT idOrders FROM orders";
+            else
+                SQLstatemnt = "SELECT idOrders FROM orders WHERE DATE(OrderDate) > CURRENT_DATE() - interval " + Date + " day";
+            MySqlDataReader reader;
+            using (cmd = new MySqlCommand(SQLstatemnt, connection))
+            {
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                    OrdersIDs.Add(reader.GetInt32(0));
+                reader.Close();
+            }
+            return OrdersIDs;
+        }
+        public void GetProductsSales(List<String> ProductsNames, List<int> ProductsSales, int ProductsNum, int Date)
+        {
+            List<int> OrdersIDs = null;
             String SqlStatemnt = "";
-            if(ProductsNum == 0)
+            bool DateEnabled = false;
+            if (ProductsNum == 0 && Date == 0)
                 SqlStatemnt = "SELECT p.ProductName, SUM(op.Quantity) FROM orderproducts AS op join products AS p " +
                 "ON p.idProducts = op.ProductID GROUP BY p.ProductName order by SUM(op.Quantity) DESC";
-            if(ProductsNum != 0)
+            else if(ProductsNum != 0 && Date == 0)
                 SqlStatemnt = "SELECT p.ProductName, SUM(op.Quantity) FROM orderproducts AS op join products AS p " +
                 "ON p.idProducts = op.ProductID GROUP BY p.ProductName order by SUM(op.Quantity) DESC LIMIT " + ProductsNum;
+            else if(ProductsNum == 0 || Date != 0)
+            {
+                DateEnabled = true;
+                OrdersIDs = GetOrdersWithDate(Date); 
+            }
             MySqlDataReader reader;
-            using (cmd = new MySqlCommand(SqlStatemnt, connection))
+            if (DateEnabled == false)
+            {
+                using (cmd = new MySqlCommand(SqlStatemnt, connection))
+                {
+                    reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        ProductsNames.Add(reader.GetString(0));
+                        ProductsSales.Add(reader.GetInt32(1));
+                    }
+                    reader.Close();
+                }
+            }
+            else
+            {
+                foreach (int ID in OrdersIDs)
+                {
+                    SqlStatemnt = "SELECT p.ProductName, SUM(op.Quantity) FROM orderproducts AS op join products AS p " +
+                    "ON p.idProducts = op.ProductID WHERE op.OrderID = " + ID + " GROUP BY p.ProductName order by SUM(op.Quantity) DESC ";
+                    using (cmd = new MySqlCommand(SqlStatemnt, connection))
+                    {
+                        reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            ProductsNames.Add(reader.GetString(0));
+                            ProductsSales.Add(reader.GetInt32(1));
+                        }
+                        reader.Close();
+                    }
+                }
+                for (int i = 0; i < ProductsSales.Count; i++)
+                    for (int j = i + 1; i < ProductsSales.Count; j++)
+                    {
+                        if (j > ProductsSales.Count - 1 || i > ProductsSales.Count - 1)
+                            break;
+                        if (ProductsNames[i] == ProductsNames[j])
+                        {
+                            ProductsSales[i] += ProductsSales[j];
+                            ProductsSales.RemoveAt(j);
+                            ProductsNames.RemoveAt(j);
+                            j--;
+                        }
+                    }
+            }
+        }
+        public void GetProfit(List<DateTime> Dates , List<Double> Profit , int Date)
+        {
+            String SqlStatemnt = "SELECT Date(OrderDate), SUM(ProfitFromOrder) FROM orders " +
+                "WHERE DATE(OrderDate) > CURRENT_DATE() - interval " + Date + " day GROUP BY OrderDate";
+            MySqlDataReader reader;
+            using(cmd = new MySqlCommand(SqlStatemnt, connection))
             {
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    ProductsNames.Add(reader.GetString(0));
-                    ProductsSales.Add(reader.GetInt32(1));
+                    Dates.Add(reader.GetDateTime(0));
+                    Profit.Add(reader.GetDouble(1));
                 }
                 reader.Close();
             }
-
         }
         public void CloseConnetion()
         {
