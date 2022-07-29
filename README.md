@@ -9,3 +9,5 @@ Packages Used:
 3-LiveChartsCore.SkiaSharpView.WPF
 4-Microsoft.Toolkit.Mvvm
 5-MySql.Data
+
+Please note:to send email report you need to add your email and password in code and create the DB in your PC or it wont work
