@@ -94,24 +94,24 @@ namespace DashBoardDB
             String Body = "<h1 style=\"color: #5e9ca0; text-align: center;\">Here is your data report:</h1> ";
             if (ProductTypeData.IsChecked == true)
             {
-                Body += "<br> <p style=\"text-align: center;\"><span style=\"font-size:x-large; \">Products Sales:</span></p> <br> <table style=\"margin-left:auto; margin-right:auto;\" border =\"4\";\"> <tbody>" +
+                Body += "<br> <p style=\"text-align: center;\"><span style=\"font-size:x-large; \">Type Sales:</span></p> <br> <table style=\"margin-left:auto; margin-right:auto;\" border =\"4\";\"> <tbody>" +
                     " <tr>  <td> Type Name </td> <td> Type Profit </td>  </tr>";
                 manageDB.GetEachTypeProfitWithDate(NameOfData, ProfitData, Date);
                 for (int i = 0; i < ProfitData.Count; i++)
                     Body += " <tr>  <td> " + NameOfData[i] + " </td> <td>" + ProfitData[i] + " </td>  </tr>";
                 Body += "</tbody> </table>";
             }
-            if(this.SalesData.IsChecked == true)
+            if (this.SalesData.IsChecked == true)
             {
                 NameOfData.Clear();
                 Body += "<br> <p style=\"text-align: center;\"><span style=\"font-size:x-large; \">Products Sales:</span></p> <br> <table style=\"margin-left:auto; margin-right:auto;\" border =\"4\";\"> <tbody>" +
                     " <tr>  <td> Product Name </td> <td> Quantity Sold </td>  </tr>";
-                manageDB.GetProductsSales(NameOfData, SalesData, 0 , Date);
+                manageDB.GetProductsSales(NameOfData, SalesData, 0, Date);
                 for (int i = 0; i < SalesData.Count; i++)
                     Body += " <tr>  <td> " + NameOfData[i] + " </td> <td>" + SalesData[i] + " </td>  </tr>";
                 Body += "</tbody> </table>";
             }
-            if(this.ProfitData.IsChecked == true)
+            if (this.ProfitData.IsChecked == true)
             {
                 ProfitData.Clear();
                 Body += "<br> <p style=\"text-align: center;\"><span style=\"font-size:x-large; \">Profit Each Day:</span></p> <br> <table style=\"margin-left:auto; margin-right:auto;\" border =\"4\";\"> <tbody>" +

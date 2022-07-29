@@ -162,7 +162,7 @@ namespace DashBoardDB
         }
         private void PrepareRowChart()
         {
-            DBmanager.GetProductsSales(ProductsName, ProductsSales , 9 , 0);
+            DBmanager.GetProductsSales(ProductsName, ProductsSales, 9, 0);
             RowSeries<int>[] rowSeries = new RowSeries<int>[ProductsSales.Count];
             for (int i = 0; i < ProductsSales.Count; i++)
                 rowSeries[i] = new RowSeries<int> { Values = new List<int> { ProductsSales[i] }, Name = ProductsName[i] };

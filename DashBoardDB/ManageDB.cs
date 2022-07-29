@@ -335,13 +335,13 @@ namespace DashBoardDB
             if (ProductsNum == 0 && Date == 0)
                 SqlStatemnt = "SELECT p.ProductName, SUM(op.Quantity) FROM orderproducts AS op join products AS p " +
                 "ON p.idProducts = op.ProductID GROUP BY p.ProductName order by SUM(op.Quantity) DESC";
-            else if(ProductsNum != 0 && Date == 0)
+            else if (ProductsNum != 0 && Date == 0)
                 SqlStatemnt = "SELECT p.ProductName, SUM(op.Quantity) FROM orderproducts AS op join products AS p " +
                 "ON p.idProducts = op.ProductID GROUP BY p.ProductName order by SUM(op.Quantity) DESC LIMIT " + ProductsNum;
-            else if(ProductsNum == 0 || Date != 0)
+            else if (ProductsNum == 0 || Date != 0)
             {
                 DateEnabled = true;
-                OrdersIDs = GetOrdersWithDate(Date); 
+                OrdersIDs = GetOrdersWithDate(Date);
             }
             MySqlDataReader reader;
             if (DateEnabled == false)
@@ -389,12 +389,12 @@ namespace DashBoardDB
                     }
             }
         }
-        public void GetProfit(List<DateTime> Dates , List<Double> Profit , int Date)
+        public void GetProfit(List<DateTime> Dates, List<Double> Profit, int Date)
         {
             String SqlStatemnt = "SELECT Date(OrderDate), SUM(ProfitFromOrder) FROM orders " +
                 "WHERE DATE(OrderDate) > CURRENT_DATE() - interval " + Date + " day GROUP BY OrderDate";
             MySqlDataReader reader;
-            using(cmd = new MySqlCommand(SqlStatemnt, connection))
+            using (cmd = new MySqlCommand(SqlStatemnt, connection))
             {
                 reader = cmd.ExecuteReader();
                 while (reader.Read())
