@@ -392,7 +392,7 @@ namespace DashBoardDB
         public void GetProfit(List<DateTime> Dates, List<Double> Profit, int Date)
         {
             String SqlStatemnt = "SELECT Date(OrderDate), SUM(ProfitFromOrder) FROM orders " +
-                "WHERE DATE(OrderDate) > CURRENT_DATE() - interval " + Date + " day GROUP BY OrderDate";
+                "WHERE DATE(OrderDate) > CURRENT_DATE() - interval " + Date + " day GROUP BY OrderDate ORDER BY OrderDate DESC";
             MySqlDataReader reader;
             using (cmd = new MySqlCommand(SqlStatemnt, connection))
             {

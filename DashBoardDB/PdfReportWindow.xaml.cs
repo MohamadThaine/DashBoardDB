@@ -45,7 +45,7 @@ namespace DashBoardDB
                 return true;
             return false;
         }
-        private bool GeneratePDF(String Location , int Date)
+        private bool GeneratePDF(String Location, int Date)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace DashBoardDB
                     TypeProfitTable.AddCell("Type Name");
                     TypeProfitTable.AddCell("Type Profit");
                     manageDB.GetEachTypeProfitWithDate(NameOfData, ProfitData, Date);
-                    for(int i = 0; i < ProfitData.Count; i++)
+                    for (int i = 0; i < ProfitData.Count; i++)
                     {
                         TypeProfitTable.AddCell(NameOfData[i]);
                         TypeProfitTable.AddCell(ProfitData[i].ToString());
@@ -131,7 +131,6 @@ namespace DashBoardDB
             {
                 return false;
             }
-
         }
         private void CreatePDF_Click(object sender, RoutedEventArgs e)
         {
@@ -149,7 +148,7 @@ namespace DashBoardDB
                 if (!string.Equals(Extention, ".pdf", StringComparison.OrdinalIgnoreCase))
                     Location += ".pdf";
                 Date = DataAskedDate();
-                bool PdfCreated = GeneratePDF(Location , Date);
+                bool PdfCreated = GeneratePDF(Location, Date);
                 if (PdfCreated)
                 {
                     MessageBoxResult ButtonClicked = MessageBox.Show("Pdf has been created , do you want to open it?",

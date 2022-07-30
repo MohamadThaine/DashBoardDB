@@ -3,6 +3,7 @@ using LiveChartsCore.SkiaSharpView;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 
 namespace DashBoardDB
@@ -20,11 +21,11 @@ namespace DashBoardDB
         List<Double> TypesProfit = new List<Double>();
         List<String> ProductsName = new List<string>();
         List<int> ProductsSales = new List<int>();
+        Thread PreparePieChartDataThread , PrepareRowChartThread , CountersThread ,PrepareWindowSizeThread;
         public MainWindow()
         {
             InitializeComponent();
-            PrepareSizeOfMainWindow();
-            connection = DBmanager.ConnectionToDB();
+            connection = new MySqlConnection(@"user id=root;password=123321Aa.;server=localhost;database=market;persistsecurityinfo=True");
             if (connection != null)
             {
                 try
@@ -37,7 +38,7 @@ namespace DashBoardDB
                     return;
                 }
             }
-            DBmanager.UpdateEachTypeProfit();
+            MultiThreading();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -47,8 +48,17 @@ namespace DashBoardDB
                 MessageBox.Show(DBError, "Error with the DataBase");
                 Application.Current.Shutdown();
             }
-            PrepareMainWindowData();
-            PrepareRowChart();
+        }
+        private void MultiThreading()
+        {
+            PrepareWindowSizeThread = new Thread(() => PrepareSizeOfMainWindow());
+            PreparePieChartDataThread = new Thread(() => DBmanager.UpdateEachTypeProfit());
+            PrepareRowChartThread = new Thread(() => PrepareRowChart());
+            CountersThread = new Thread(() => PrepareMainWindowData());
+            PrepareWindowSizeThread.Start();
+            PreparePieChartDataThread.Start();
+            PrepareRowChartThread.Start();
+            CountersThread.Start();
         }
         private Double GetLastVersion()
         {
@@ -63,33 +73,37 @@ namespace DashBoardDB
         {
             Double Height = 0;
             Double Width = 0;
-            if (SystemParameters.PrimaryScreenHeight < 1080 || SystemParameters.PrimaryScreenWidth < 1920)//for anything bellow fullhd
+            this.Dispatcher.Invoke(() =>
             {
-                Height = SystemParameters.PrimaryScreenHeight * 0.90;
-                Width = SystemParameters.PrimaryScreenWidth * 0.90;
-                Pie.Height = Height * 0.35;
-            }
-            else if (SystemParameters.PrimaryScreenHeight < 1440 || SystemParameters.PrimaryScreenWidth < 2560)//for anything below 2k and fullhd and above
-            {
-                Height = SystemParameters.PrimaryScreenHeight * 0.77;
-                Width = SystemParameters.PrimaryScreenWidth * 0.55;
-                Pie.Height = Height * 0.48;
-            }
-            else //for 2k and above
-            {
-                Height = SystemParameters.PrimaryScreenHeight * 0.67;
-                Width = SystemParameters.PrimaryScreenWidth * 0.5;
-                Pie.Height = Height * 0.48;
-            }
-            this.Height = Height;
-            this.Width = Width;
-            DBimage.Height = Height * 0.11;
-            PDFimage.Height = DBimage.Height;
-            Emailimage.Height = PDFimage.Height;
-            CompaniesIMG.Height = Height * 0.0841;
-            PordouctIMG.Height = CompaniesIMG.Height;
-            Profit2IMG.Height = PordouctIMG.Height;
-            MovingChart.Width = Width * 0.42;
+                if (SystemParameters.PrimaryScreenHeight < 1080 || SystemParameters.PrimaryScreenWidth < 1920)//for anything bellow fullhd
+                {
+                    Height = SystemParameters.PrimaryScreenHeight * 0.90;
+                    Width = SystemParameters.PrimaryScreenWidth * 0.90;
+                    Pie.Height = Height * 0.35;
+                }
+                else if (SystemParameters.PrimaryScreenHeight < 1440 || SystemParameters.PrimaryScreenWidth < 2560)//for anything below 2k and fullhd and above
+                {
+                    Height = SystemParameters.PrimaryScreenHeight * 0.77;
+                    Width = SystemParameters.PrimaryScreenWidth * 0.55;
+                    Pie.Height = Height * 0.48;
+                }
+                else //for 2k and above
+                {
+                    Height = SystemParameters.PrimaryScreenHeight * 0.67;
+                    Width = SystemParameters.PrimaryScreenWidth * 0.5;
+                    Pie.Height = Height * 0.48;
+                }
+                this.Height = Height;
+                this.Width = Width;
+                DBimage.Height = Height * 0.11;
+                PDFimage.Height = DBimage.Height;
+                Emailimage.Height = PDFimage.Height;
+                CompaniesIMG.Height = Height * 0.0841;
+                PordouctIMG.Height = CompaniesIMG.Height;
+                Profit2IMG.Height = PordouctIMG.Height;
+                MovingChart.Width = Width * 0.42;
+                return;
+            }); 
         }
         private Double[] GetProductNumber()
         {
@@ -132,11 +146,15 @@ namespace DashBoardDB
         public void PrepareMainWindowData()//Changed To public for accessing update the DB to make it live with each update
         {
             ArrayCounter = GetProductNumber();
-            TotalProducts.Text = ArrayCounter[0].ToString();
-            TotalCompanies.Text = ArrayCounter[1].ToString();
-            TotalProfits.Text = ArrayCounter[2].ToString() + "$";
-            OrdersToday.Text = ArrayCounter[3].ToString();
-            ProfitToday.Text = ArrayCounter[4].ToString() + "$";
+            this.Dispatcher.Invoke(() =>
+            {
+                TotalProducts.Text = ArrayCounter[0].ToString();
+                TotalCompanies.Text = ArrayCounter[1].ToString();
+                TotalProfits.Text = ArrayCounter[2].ToString() + "$";
+                OrdersToday.Text = ArrayCounter[3].ToString();
+                ProfitToday.Text = ArrayCounter[4].ToString() + "$";
+            });
+            return;
         }
         public void PreparePieChartWithDate(object sender, RoutedEventArgs e)//public for live update
         {
@@ -166,7 +184,8 @@ namespace DashBoardDB
             RowSeries<int>[] rowSeries = new RowSeries<int>[ProductsSales.Count];
             for (int i = 0; i < ProductsSales.Count; i++)
                 rowSeries[i] = new RowSeries<int> { Values = new List<int> { ProductsSales[i] }, Name = ProductsName[i] };
-            RowChart.Series = rowSeries;
+            this.Dispatcher.Invoke(() => RowChart.Series = rowSeries);
+            
         }
         private void Email_Click(object sender, RoutedEventArgs e)
         {
