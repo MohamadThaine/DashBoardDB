@@ -27,10 +27,12 @@ namespace DashBoardDB
         String MissingOrderProductName = "";
         Double MissingOrderTotalPrice = 0;
         private readonly MainWindow LiveUpdate;
+        TextBox[] TextBoxes;
         public AddRemoveEdIt(MainWindow LiveUpdates)
         {
             LiveUpdate = LiveUpdates;
             InitializeComponent();
+            TextBoxes = new TextBox[7] { productnamebox, productojbricebox, productpfbricebox, quantitybox, OrderProductNameBox, OrderProductQuantityBox, PhoneNumbox };
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -38,7 +40,13 @@ namespace DashBoardDB
             managaDB.CloseConnetion();
             Close();
         }
-
+        private void ClearTextBoxes()
+        {
+            foreach (TextBox Text in TextBoxes)
+            {
+                Text.Clear();
+            }
+        }
         private void Add_Click(object sender, RoutedEventArgs e)
         {
             addflag = true;
@@ -280,6 +288,7 @@ namespace DashBoardDB
         }
         private void EditType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            ClearTextBoxes();
             if (addflag == true)
             {
                 if (EditType.SelectedIndex == 1)
@@ -386,7 +395,16 @@ namespace DashBoardDB
                 else
                     MissingOrderProductName = OrderProductNameBox.Text;
                 if (OrderProductQuantityBox.Text != "")
-                    MissingOrderProductQuantity = Convert.ToInt32(OrderProductQuantityBox.Text);
+                {
+                    try
+                    {
+                        MissingOrderProductQuantity = Convert.ToInt32(OrderProductQuantityBox.Text);
+                    }catch(OverflowException TooLargeNumber)
+                    {
+                        MessageBox.Show("Qunatity number is too large! Where would you fit all of that\n Error code is " + TooLargeNumber.HResult);
+                        return;
+                    }
+                }
                 MissingOrderTotalPriceForLastProduct = managaDB.GetProductPriceWithQuantity(OrderProductNameBox.Text, MissingOrderProductQuantity);
                 if (MissingOrderTotalPriceForLastProduct == 0)
                 {
@@ -409,6 +427,16 @@ namespace DashBoardDB
             {
                 if (EditType.SelectedIndex == 1)
                 {
+                    try
+                    {
+                        Convert.ToInt32(quantitybox.Text);
+                        Convert.ToDouble(productojbricebox.Text);
+                        Convert.ToDouble(productpfbricebox.Text);
+                    }catch (OverflowException TooLargeNumber)
+                    {
+                        MessageBox.Show("One of the numbers is too large!\n Error code is " + TooLargeNumber.HResult);
+                        return;
+                    }
                     if (productnamebox.Text == "" || productpfbricebox.Text == "" || TypeBox.SelectedItem.ToString() == "" ||
                         CompanyBox.SelectedItem == null || quantitybox.Text == "" || productojbricebox.Text == "" || expdatepciker.SelectedDate.Value == null)
                     {

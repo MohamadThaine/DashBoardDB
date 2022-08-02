@@ -231,7 +231,7 @@
         </Style>
     </Window.Resources>
     <Border BorderBrush="White" BorderThickness="1">
-        <Grid Background="#181735" >
+        <Grid Background="#181735" Name="MainGrid" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="70"></RowDefinition>
                 <RowDefinition Height="50"></RowDefinition>
@@ -293,9 +293,9 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <ScrollViewer Name="ScrollBar" Grid.ColumnSpan="2" Visibility="Hidden" IsEnabled="False">
-                        <TextBox Name="ProductNameAndQuantityBlock" Grid.ColumnSpan="2" Visibility="Hidden" 
+                        <TextBlock Name="ProductNameAndQuantityBlock" Grid.ColumnSpan="2" Visibility="Hidden" 
                                  FontFamily="fonts/#Dosis" FontSize="20" Background="{x:Null}"  
-                                  Text="     Product:                                            Quantity:   "  Foreground="White "></TextBox>
+                                  Text="     Product:                                            Quantity:   "  Foreground="White "></TextBlock>
                     </ScrollViewer>
                 </Grid>
 
