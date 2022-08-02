@@ -344,7 +344,7 @@ namespace DashBoardDB
                 Regex regex = new Regex("[^0-9]+");
                 e.Handled = regex.IsMatch(e.Text);
             }
-            else if(productpfpriceblock.Text == "    Order ID:")
+            else if (productpfpriceblock.Text == "    Order ID:")
             {
                 Regex regex = new Regex("[^0-9]+");
                 e.Handled = regex.IsMatch(e.Text);
@@ -404,7 +404,8 @@ namespace DashBoardDB
                     try
                     {
                         MissingOrderProductQuantity = Convert.ToInt32(OrderProductQuantityBox.Text);
-                    }catch(OverflowException TooLargeNumber)
+                    }
+                    catch (OverflowException TooLargeNumber)
                     {
                         MessageBox.Show("Qunatity number is too large! Where would you fit all of that\n Error code is " + TooLargeNumber.HResult);
                         return;
@@ -437,15 +438,16 @@ namespace DashBoardDB
                         Convert.ToInt32(quantitybox.Text);
                         Convert.ToDouble(productojbricebox.Text);
                         Convert.ToDouble(productpfbricebox.Text);
-                    }catch (OverflowException TooLargeNumber)
+                    }
+                    catch (OverflowException TooLargeNumber)
                     {
                         MessageBox.Show("One of the numbers is too large!\n Error code is " + TooLargeNumber.HResult);
                         return;
                     }
-                    if(expdatepciker.SelectedDate.Value == null || expdatepciker.SelectedDate.Value < DateTime.Today)
+                    if (expdatepciker.SelectedDate.Value == null || expdatepciker.SelectedDate.Value < DateTime.Today)
                     {
                         MessageBox.Show("Please pick a valid exp date!");
-                        return; 
+                        return;
                     }
                     if (productnamebox.Text == "" || productpfbricebox.Text == "" || TypeBox.SelectedItem.ToString() == "" ||
                         CompanyBox.SelectedItem == null || quantitybox.Text == "" || productojbricebox.Text == "")

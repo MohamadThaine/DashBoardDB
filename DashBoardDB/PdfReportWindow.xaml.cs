@@ -107,7 +107,7 @@ namespace DashBoardDB
                     SalesDataPara.Alignment = Element.ALIGN_CENTER;
                     Pdf.Add(SalesDataPara);
                     PdfPTable SalesDataTable = new PdfPTable(2);
-                    
+
                     SalesDataTable.AddCell("Product Name");
                     SalesDataTable.AddCell("Quantity Sold");
                     for (int i = 0; i < SalesData.Count; i++)

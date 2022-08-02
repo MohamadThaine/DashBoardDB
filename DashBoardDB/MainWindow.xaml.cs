@@ -21,7 +21,7 @@ namespace DashBoardDB
         List<Double> TypesProfit = new List<Double>();
         List<String> ProductsName = new List<string>();
         List<int> ProductsSales = new List<int>();
-        Thread PreparePieChartDataThread , PrepareRowChartThread , CountersThread ,PrepareWindowSizeThread;
+        Thread PreparePieChartDataThread, PrepareRowChartThread, CountersThread, PrepareWindowSizeThread;
         public MainWindow()
         {
             InitializeComponent();
@@ -103,7 +103,7 @@ namespace DashBoardDB
                 Profit2IMG.Height = PordouctIMG.Height;
                 MovingChart.Width = Width * 0.42;
                 return;
-            }); 
+            });
         }
         private Double[] GetProductNumber()
         {
@@ -185,7 +185,7 @@ namespace DashBoardDB
             for (int i = 0; i < ProductsSales.Count; i++)
                 rowSeries[i] = new RowSeries<int> { Values = new List<int> { ProductsSales[i] }, Name = ProductsName[i] };
             this.Dispatcher.Invoke(() => RowChart.Series = rowSeries);
-            
+
         }
         private void Email_Click(object sender, RoutedEventArgs e)
         {

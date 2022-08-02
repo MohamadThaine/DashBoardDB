@@ -64,7 +64,7 @@ namespace DashBoardDB
             {
                 MessageBox.Show("There is no profit in this date to show!");
                 return;
-            } 
+            }
             var client = new SmtpClient()
             {
                 Host = "smtp.gmail.com",

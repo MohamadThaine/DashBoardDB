@@ -259,8 +259,9 @@ namespace DashBoardDB
             bool FirstTimeFlag = false;
             foreach (int ID in OrdersID)
             {
-                SQLstatemnt = "SELECT p.ProductsTypeID, SUM(op.ProfitPrice - op.OGprice) FROM `orderproducts` AS op" +
-                    " INNER JOIN `products` AS p ON p.idProducts = op.ProductID WHERE op.OrderID = " + ID + " GROUP BY p.ProductsTypeID";
+                SQLstatemnt = "SELECT pt.ProductTypesName , pt.idProductTypes, SUM(op.ProfitPrice - op.OGprice) FROM `orderproducts` AS op " +
+                    "INNER JOIN `products` AS p ON p.idProducts = op.ProductID " +
+                    "INNER JOIN `producttypes` as pt ON pt.idProductTypes  = p.ProductsTypeID WHERE OrderID = " + ID + " GROUP BY pt.idProductTypes ";
                 using (cmd = new MySqlCommand(SQLstatemnt, connection))
                 {
                     reader = cmd.ExecuteReader();
@@ -268,33 +269,24 @@ namespace DashBoardDB
                     {
                         if (FirstTimeFlag == false)
                         {
-                            CurrentTypeID = reader.GetInt32(0);
+                            TypesName.Add(reader.GetString(0));
+                            CurrentTypeID = reader.GetInt32(1);
                             FirstTimeFlag = true;
                         }
-                        if (reader.GetInt32(0) != CurrentTypeID)
+                        if (reader.GetInt32(1) != CurrentTypeID)
                         {
-                            SQLstatemnt = "SELECT ProductTypesName FROM producttypes WHERE (`idProductTypes` = '" + CurrentTypeID + "')";
-                            CurrentTypeID = reader.GetInt32(0);
+                            TypesName.Add(reader.GetString(0));
+                            CurrentTypeID = reader.GetInt32(1);
                             TotalProfit.Add(SumProfit);
-                            SumProfit = 0;
-                            SumProfit += reader.GetDouble(1);
-                            reader.Close();
-                            using (cmd = new MySqlCommand(SQLstatemnt, connection))
-                                TypesName.Add(cmd.ExecuteScalar().ToString());
+                            SumProfit = reader.GetDouble(2);
                         }
                         else
-                            SumProfit += reader.GetDouble(1);
-                        if (ID == OrdersID.Last())
                         {
-                            if (!reader.IsClosed)
-                                reader.Close();
-                            SQLstatemnt = "SELECT ProductTypesName FROM producttypes WHERE (`idProductTypes` = '" + CurrentTypeID + "')";
-                            using (cmd = new MySqlCommand(SQLstatemnt, connection))
-                                TypesName.Add(cmd.ExecuteScalar().ToString());
-                            TotalProfit.Add(SumProfit);
-                            break;
+                            SumProfit += reader.GetDouble(2);
                         }
-                        break;
+                        if (ID == OrdersID.Last())
+                            TotalProfit.Add(SumProfit);
+
                     }
                     reader.Close();
                 }
