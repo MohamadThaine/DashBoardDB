@@ -3,9 +3,9 @@ DashBorad in XAML , C# (WPF app).
 
 My First WPF app , i created only to practice programming in c# and design in XAML and practricing SQL commands
 
-My Project is about 95% complate
+My Project is about 100% complate
 
-My Testing of the app is:50% Complate
+My Testing of the app is:80% Complate
 
 Packages Used:
 
