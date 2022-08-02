@@ -16,6 +16,7 @@ namespace DashBoardDB
     {
         ManageDB manageDB;
         int Date;
+        String Error = "";
         public PdfReportWindow()
         {
             InitializeComponent();
@@ -74,13 +75,18 @@ namespace DashBoardDB
                 Pdf.Add(DataReportPara);
                 if (ProductTypeData.IsChecked == true)
                 {
+                    manageDB.GetEachTypeProfitWithDate(NameOfData, ProfitData, Date);
+                    if (NameOfData.Count == 0)
+                    {
+                        Error = "No Profit in this Date to show!";
+                        return false;
+                    }
                     Paragraph TypeProfitPara = new Paragraph("Type Profit Table:\n\n");
                     TypeProfitPara.Alignment = Element.ALIGN_CENTER;
                     Pdf.Add(TypeProfitPara);
                     PdfPTable TypeProfitTable = new PdfPTable(2);
                     TypeProfitTable.AddCell("Type Name");
                     TypeProfitTable.AddCell("Type Profit");
-                    manageDB.GetEachTypeProfitWithDate(NameOfData, ProfitData, Date);
                     for (int i = 0; i < ProfitData.Count; i++)
                     {
                         TypeProfitTable.AddCell(NameOfData[i]);
@@ -91,13 +97,19 @@ namespace DashBoardDB
                 if (this.SalesData.IsChecked == true)
                 {
                     NameOfData.Clear();
+                    manageDB.GetProductsSales(NameOfData, SalesData, 0, Date);
+                    if (NameOfData.Count == 0)
+                    {
+                        Error = "No Profit in this Date to show!";
+                        return false;
+                    }
                     Paragraph SalesDataPara = new Paragraph("Product Sold Table:\n\n");
                     SalesDataPara.Alignment = Element.ALIGN_CENTER;
                     Pdf.Add(SalesDataPara);
                     PdfPTable SalesDataTable = new PdfPTable(2);
+                    
                     SalesDataTable.AddCell("Product Name");
                     SalesDataTable.AddCell("Quantity Sold");
-                    manageDB.GetProductsSales(NameOfData, SalesData, 0, Date);
                     for (int i = 0; i < SalesData.Count; i++)
                     {
                         SalesDataTable.AddCell(NameOfData[i]);
@@ -108,13 +120,18 @@ namespace DashBoardDB
                 if (this.ProfitData.IsChecked == true)
                 {
                     ProfitData.Clear();
+                    manageDB.GetProfit(DateOfData, ProfitData, Date);
+                    if (ProfitData.Count == 0)
+                    {
+                        Error = "No Profit in this Date to show!";
+                        return false;
+                    }
                     Paragraph ProfitEachDay = new Paragraph("Profit By Day Table:\n\n");
                     ProfitEachDay.Alignment = Element.ALIGN_CENTER;
                     Pdf.Add(ProfitEachDay);
                     PdfPTable ProfitEachDayTable = new PdfPTable(2);
                     ProfitEachDayTable.AddCell("Date");
                     ProfitEachDayTable.AddCell("Profit");
-                    manageDB.GetProfit(DateOfData, ProfitData, Date);
                     for (int i = 0; i < DateOfData.Count; i++)
                     {
                         ProfitEachDayTable.AddCell(DateOfData[i].ToString("yyyy/MM/dd"));
@@ -129,6 +146,7 @@ namespace DashBoardDB
             }
             catch (PdfException PDFex)
             {
+                Error = PDFex.Message;
                 return false;
             }
         }
@@ -165,8 +183,7 @@ namespace DashBoardDB
                     }
                 }
                 else
-                    MessageBox.Show("There was an error while creating pdf file(hint:maybe user permission " +
-                        "dont allow creating files in this location!");
+                    MessageBox.Show("There was an error while creating pdf file \n Error message: " + Error);
 
             }
         }

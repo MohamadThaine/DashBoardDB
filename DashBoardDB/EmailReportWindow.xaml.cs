@@ -60,6 +60,11 @@ namespace DashBoardDB
             string From = "Your Gmail Email Here";//note:must be gmail!
             string subject = "DashBoard Email!";
             string body = Create_Body();
+            if (body == null)
+            {
+                MessageBox.Show("There is no profit in this date to show!");
+                return;
+            } 
             var client = new SmtpClient()
             {
                 Host = "smtp.gmail.com",
@@ -94,9 +99,11 @@ namespace DashBoardDB
             String Body = "<h1 style=\"color: #5e9ca0; text-align: center;\">Here is your data report:</h1> ";
             if (ProductTypeData.IsChecked == true)
             {
+                manageDB.GetEachTypeProfitWithDate(NameOfData, ProfitData, Date);
+                if (NameOfData.Count == 0)
+                    return null;
                 Body += "<br> <p style=\"text-align: center;\"><span style=\"font-size:x-large; \">Type Sales:</span></p> <br> <table style=\"margin-left:auto; margin-right:auto;\" border =\"4\";\"> <tbody>" +
                     " <tr>  <td> Type Name </td> <td> Type Profit </td>  </tr>";
-                manageDB.GetEachTypeProfitWithDate(NameOfData, ProfitData, Date);
                 for (int i = 0; i < ProfitData.Count; i++)
                     Body += " <tr>  <td> " + NameOfData[i] + " </td> <td>" + ProfitData[i] + " </td>  </tr>";
                 Body += "</tbody> </table>";
@@ -104,9 +111,11 @@ namespace DashBoardDB
             if (this.SalesData.IsChecked == true)
             {
                 NameOfData.Clear();
+                manageDB.GetProductsSales(NameOfData, SalesData, 0, Date);
+                if (NameOfData.Count == 0)
+                    return null;
                 Body += "<br> <p style=\"text-align: center;\"><span style=\"font-size:x-large; \">Products Sales:</span></p> <br> <table style=\"margin-left:auto; margin-right:auto;\" border =\"4\";\"> <tbody>" +
                     " <tr>  <td> Product Name </td> <td> Quantity Sold </td>  </tr>";
-                manageDB.GetProductsSales(NameOfData, SalesData, 0, Date);
                 for (int i = 0; i < SalesData.Count; i++)
                     Body += " <tr>  <td> " + NameOfData[i] + " </td> <td>" + SalesData[i] + " </td>  </tr>";
                 Body += "</tbody> </table>";
@@ -114,9 +123,11 @@ namespace DashBoardDB
             if (this.ProfitData.IsChecked == true)
             {
                 ProfitData.Clear();
+                manageDB.GetProfit(DateOfData, ProfitData, Date);
+                if (ProfitData.Count == 0)
+                    return null;
                 Body += "<br> <p style=\"text-align: center;\"><span style=\"font-size:x-large; \">Profit Each Day:</span></p> <br> <table style=\"margin-left:auto; margin-right:auto;\" border =\"4\";\"> <tbody>" +
                     " <tr>  <td> Date </td> <td> Profit </td>  </tr>";
-                manageDB.GetProfit(DateOfData, ProfitData, Date);
                 for (int i = 0; i < DateOfData.Count; i++)
                     Body += " <tr>  <td> " + DateOfData[i].ToString("yyyy/MM/dd") + " </td> <td>" + ProfitData[i] + " </td>  </tr>";
                 Body += "</tbody> </table>";

@@ -344,6 +344,11 @@ namespace DashBoardDB
                 Regex regex = new Regex("[^0-9]+");
                 e.Handled = regex.IsMatch(e.Text);
             }
+            else if(productpfpriceblock.Text == "    Order ID:")
+            {
+                Regex regex = new Regex("[^0-9]+");
+                e.Handled = regex.IsMatch(e.Text);
+            }
         }
         private void missingorderquantitybox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
