@@ -13,3 +13,14 @@ Packages Used:
 5-MySql.Data
 
 Please note:to send email report you need to add your email and password in code and create the DB in your PC or it wont work
+
+some screenshots of the app:
+
+Main window:
+![image](https://i.snipboard.io/0ckjIm.jpg)
+
+Add missing order:
+![image](https://i.snipboard.io/hnP3uY.jpg)
+
+Create a PDF:
+![image](https://snipboard.io/sHcW2P.jpg)
