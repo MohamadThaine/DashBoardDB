@@ -442,8 +442,13 @@ namespace DashBoardDB
                         MessageBox.Show("One of the numbers is too large!\n Error code is " + TooLargeNumber.HResult);
                         return;
                     }
+                    if(expdatepciker.SelectedDate.Value == null || expdatepciker.SelectedDate.Value < DateTime.Today)
+                    {
+                        MessageBox.Show("Please pick a valid exp date!");
+                        return; 
+                    }
                     if (productnamebox.Text == "" || productpfbricebox.Text == "" || TypeBox.SelectedItem.ToString() == "" ||
-                        CompanyBox.SelectedItem == null || quantitybox.Text == "" || productojbricebox.Text == "" || expdatepciker.SelectedDate.Value == null)
+                        CompanyBox.SelectedItem == null || quantitybox.Text == "" || productojbricebox.Text == "")
                     {
                         MessageBox.Show("Dont leave any TextBox empty!");
                         return;
