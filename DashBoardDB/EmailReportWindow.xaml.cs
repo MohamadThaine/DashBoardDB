@@ -57,7 +57,7 @@ namespace DashBoardDB
             }
             Date = DataAskedDate();
             string To = EmailTextBox.Text;
-            string From = "hamod.khled12345@gmail.com";
+            string From = "Your Gmail Email Here";//note:must be gmail!
             string subject = "DashBoard Email!";
             string body = Create_Body();
             var client = new SmtpClient()
@@ -67,7 +67,7 @@ namespace DashBoardDB
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(From, "zvttwdcdafswugfs")//zvttwdcdafswugfs
+                Credentials = new NetworkCredential(From, "Your Gmail Passowrd Here")//note:i suggest using 1 time app password 
             };
             using (var mailMessage = new MailMessage(From, To)
             {

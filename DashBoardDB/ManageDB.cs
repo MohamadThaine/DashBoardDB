@@ -281,16 +281,20 @@ namespace DashBoardDB
                             reader.Close();
                             using (cmd = new MySqlCommand(SQLstatemnt, connection))
                                 TypesName.Add(cmd.ExecuteScalar().ToString());
-                            if (ID == OrdersID.Last())
-                            {
-                                SQLstatemnt = "SELECT ProductTypesName FROM producttypes WHERE (`idProductTypes` = '" + CurrentTypeID + "')";
-                                using (cmd = new MySqlCommand(SQLstatemnt, connection))
-                                    TypesName.Add(cmd.ExecuteScalar().ToString());
-                                TotalProfit.Add(SumProfit);
-                            }
+                        }
+                        else
+                            SumProfit += reader.GetDouble(1);
+                        if (ID == OrdersID.Last())
+                        {
+                            if (!reader.IsClosed)
+                                reader.Close();
+                            SQLstatemnt = "SELECT ProductTypesName FROM producttypes WHERE (`idProductTypes` = '" + CurrentTypeID + "')";
+                            using (cmd = new MySqlCommand(SQLstatemnt, connection))
+                                TypesName.Add(cmd.ExecuteScalar().ToString());
+                            TotalProfit.Add(SumProfit);
                             break;
                         }
-                        SumProfit += reader.GetDouble(1);
+                        break;
                     }
                     reader.Close();
                 }
