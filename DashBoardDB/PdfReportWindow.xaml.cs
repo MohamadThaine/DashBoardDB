@@ -9,9 +9,6 @@ using System.Windows;
 
 namespace DashBoardDB
 {
-    /// <summary>
-    /// Interaction logic for PdfReportWindow.xaml
-    /// </summary>
     public partial class PdfReportWindow : Window
     {
         ManageDB manageDB;
@@ -184,7 +181,6 @@ namespace DashBoardDB
                 }
                 else
                     MessageBox.Show("There was an error while creating pdf file \n Error message: " + Error);
-
             }
         }
     }

@@ -7,16 +7,13 @@ using System.Windows.Input;
 
 namespace DashBoardDB
 {
-    /// <summary>
-    /// Interaction logic for AddRemoveEdIt.xaml
-    /// </summary>
     public partial class AddRemoveEdIt : Window
     {
         string[] AddType = new string[] { "Choose what you like to add", "Product", "Company", "Missing Order" };
         string[] RemoveType = new string[] { "Choose what you like to remove", "Product", "Company", "Order" };
         Boolean addflag = false, Checker; //Checker used to check if the item has been added/removed or not
         Visibility Show = Visibility.Visible;
-        Visibility hide = Visibility.Hidden;
+        Visibility Hide = Visibility.Hidden;
         bool emailvalition;
         ManageDB managaDB = new();
         List<String> TypesList = new List<String>();
@@ -92,26 +89,26 @@ namespace DashBoardDB
         }
         private void hideboxes()
         {
-            productnameblock.Visibility = hide;
-            productnamebox.Visibility = hide;
-            ProductTypeBlock.Visibility = hide;
-            TypeBox.Visibility = hide;
-            productogpriceblock.Visibility = hide;
-            productojbricebox.Visibility = hide;
-            productpfpriceblock.Visibility = hide;
-            productpfbricebox.Visibility = hide;
-            quantityblock.Visibility = hide;
-            quantitybox.Visibility = hide;
-            companyblock.Visibility = hide;
-            CompanyBox.Visibility = hide;
-            expdateblock.Visibility = hide;
-            expdatepciker.Visibility = hide;
-            OrderProductNameBlock.Visibility = hide;
-            OrderProductNameBox.Visibility = hide;
-            OrderProductQuantityBlock.Visibility = hide;
-            OrderProductQuantityBox.Visibility = hide;
-            ScrollBar.Visibility = hide;
-            AddProductToOrderBlock.Visibility = hide;
+            productnameblock.Visibility = Hide;
+            productnamebox.Visibility = Hide;
+            ProductTypeBlock.Visibility = Hide;
+            TypeBox.Visibility = Hide;
+            productogpriceblock.Visibility = Hide;
+            productojbricebox.Visibility = Hide;
+            productpfpriceblock.Visibility = Hide;
+            productpfbricebox.Visibility = Hide;
+            quantityblock.Visibility = Hide;
+            quantitybox.Visibility = Hide;
+            companyblock.Visibility = Hide;
+            CompanyBox.Visibility = Hide;
+            expdateblock.Visibility = Hide;
+            expdatepciker.Visibility = Hide;
+            OrderProductNameBlock.Visibility = Hide;
+            OrderProductNameBox.Visibility = Hide;
+            OrderProductQuantityBlock.Visibility = Hide;
+            OrderProductQuantityBox.Visibility = Hide;
+            ScrollBar.Visibility = Hide;
+            AddProductToOrderBlock.Visibility = Hide;
         }
         private void PrepareAddProduct()
         {
@@ -142,26 +139,26 @@ namespace DashBoardDB
                 expdateblock.Text = "Exp date:";
                 expdatepciker.Visibility = Show;
                 expdatepciker.Visibility = Show;
-                PhoneNumber.Visibility = hide;
-                PhoneNumbox.Visibility = hide;
+                PhoneNumber.Visibility = Hide;
+                PhoneNumbox.Visibility = Hide;
                 Confirm.Visibility = Show;
             }
             else
             {
-                productnameblock.Visibility = hide;
-                productnamebox.Visibility = hide;
-                ProductTypeBlock.Visibility = hide;
-                TypeBox.Visibility = hide;
-                productogpriceblock.Visibility = hide;
-                productojbricebox.Visibility = hide;
-                productpfpriceblock.Visibility = hide;
-                productpfbricebox.Visibility = hide;
-                quantityblock.Visibility = hide;
-                quantitybox.Visibility = hide;
-                companyblock.Visibility = hide;
-                CompanyBox.Visibility = hide;
-                expdateblock.Visibility = hide;
-                expdatepciker.Visibility = hide;
+                productnameblock.Visibility = Hide;
+                productnamebox.Visibility = Hide;
+                ProductTypeBlock.Visibility = Hide;
+                TypeBox.Visibility = Hide;
+                productogpriceblock.Visibility = Hide;
+                productojbricebox.Visibility = Hide;
+                productpfpriceblock.Visibility = Hide;
+                productpfbricebox.Visibility = Hide;
+                quantityblock.Visibility = Hide;
+                quantitybox.Visibility = Hide;
+                companyblock.Visibility = Hide;
+                CompanyBox.Visibility = Hide;
+                expdateblock.Visibility = Hide;
+                expdatepciker.Visibility = Hide;
             }
 
         }
@@ -183,13 +180,13 @@ namespace DashBoardDB
             }
             else
             {
-                productnameblock.Visibility = hide;
-                productnamebox.Visibility = hide;
-                productpfpriceblock.Visibility = hide;
-                productpfbricebox.Visibility = hide;
-                PhoneNumber.Visibility = hide;
-                PhoneNumbox.Visibility = hide;
-                Confirm.Visibility = hide;
+                productnameblock.Visibility = Hide;
+                productnamebox.Visibility = Hide;
+                productpfpriceblock.Visibility = Hide;
+                productpfbricebox.Visibility = Hide;
+                PhoneNumber.Visibility = Hide;
+                PhoneNumbox.Visibility = Hide;
+                Confirm.Visibility = Hide;
             }
         }
         private void PrepareMissingOrder()
@@ -228,17 +225,17 @@ namespace DashBoardDB
                 OrderProductNameBox.IsEnabled = false;
                 OrderProductQuantityBlock.IsEnabled = false;
                 OrderProductQuantityBox.IsEnabled = false;
-                OrderProductNameBlock.Visibility = hide;
-                OrderProductNameBox.Visibility = hide;
-                OrderProductQuantityBlock.Visibility = hide;
-                OrderProductQuantityBox.Visibility = hide;
-                AddProductToOrderBlock.Visibility = hide;
-                ProductNameAndQuantityBlock.Visibility = hide;
-                ScrollBar.Visibility = hide;
+                OrderProductNameBlock.Visibility = Hide;
+                OrderProductNameBox.Visibility = Hide;
+                OrderProductQuantityBlock.Visibility = Hide;
+                OrderProductQuantityBox.Visibility = Hide;
+                AddProductToOrderBlock.Visibility = Hide;
+                ProductNameAndQuantityBlock.Visibility = Hide;
+                ScrollBar.Visibility = Hide;
                 ScrollBar.IsEnabled = false;
                 quantitybox.IsReadOnly = false;
-                expdateblock.Visibility = hide;
-                expdatepciker.Visibility = hide;
+                expdateblock.Visibility = Hide;
+                expdatepciker.Visibility = Hide;
             }
         }
         private void PrepareRemoveProdect()
@@ -339,12 +336,12 @@ namespace DashBoardDB
         }
         private void quantitybox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (productpfpriceblock.Text == "Profit Price:")
+            if (addflag == true && EditType.SelectedIndex == 1)
             {
                 Regex regex = new Regex("[^0-9]+");
                 e.Handled = regex.IsMatch(e.Text);
             }
-            else if (productpfpriceblock.Text == "    Order ID:")
+            else if (addflag == false && EditType.SelectedIndex == 3)
             {
                 Regex regex = new Regex("[^0-9]+");
                 e.Handled = regex.IsMatch(e.Text);
@@ -352,10 +349,8 @@ namespace DashBoardDB
         }
         private void missingorderquantitybox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            {
-                Regex regex = new Regex("[^0-9]+");
-                e.Handled = regex.IsMatch(e.Text);
-            }
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
         private void productpfbricebox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -375,10 +370,6 @@ namespace DashBoardDB
         {
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
-            if (PhoneNumbox.Text.Length >= 10)
-            {
-                MessageBox.Show("Phone Number cant be more than 10 numbers!");
-            }
         }
         private void Enter_KeyDown(object sender, KeyEventArgs e)
         {

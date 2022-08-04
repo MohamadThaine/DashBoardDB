@@ -306,7 +306,7 @@
                 <ComboBox Grid.Row="5" Name="CompanyBox" Width="250" Height="30" VerticalAlignment="Top" FontFamily="fonts/#Dosis" BorderBrush="{x:Null}" IsEditable="True">
                 </ComboBox>
                 <TextBlock Grid.Row="6" Name="PhoneNumber" Text="Phone Number:" TextWrapping="Wrap" Margin="4,7,316,15" FontSize="11" FontFamily="fonts/#Dosis" Foreground="White" Visibility="Hidden" />
-                <TextBox Name="PhoneNumbox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="5"  FontSize="20" FontFamily="fonts/#Dosis" Visibility="Hidden" PreviewTextInput="PhoneNumber_PreviewTextInput"/>
+                <TextBox Name="PhoneNumbox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="5"  FontSize="20" FontFamily="fonts/#Dosis" Visibility="Hidden" MaxLength="10" PreviewTextInput="PhoneNumber_PreviewTextInput"/>
                 <TextBlock Grid.Row="6" Name="quantityblock" Text="Quantity:" TextWrapping="Wrap" Margin="16,5,304,17" FontSize="15" FontFamily="fonts/#Dosis" Foreground="White"/>
                 <TextBox Name="quantitybox" Text="" TextWrapping="Wrap" MaxHeight="30" MaxWidth="250" Margin="-1,38,1,9" Grid.RowSpan="2" Grid.Row="5"  PreviewTextInput="quantitybox_PreviewTextInput" FontSize="20" FontFamily="fonts/#Dosis"/>
             </Grid>

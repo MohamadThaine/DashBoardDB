@@ -7,9 +7,6 @@ using System.Windows;
 
 namespace DashBoardDB
 {
-    /// <summary>
-    /// Interaction logic for EmailReportWindow.xaml
-    /// </summary>
     public partial class EmailReportWindow : Window
     {
         int Date = 0;
