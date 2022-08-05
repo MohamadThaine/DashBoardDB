@@ -146,8 +146,8 @@
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Orders# Today:" TextWrapping="Wrap" FontFamily="fonts/#Dosis" FontSize="17" HorizontalAlignment="Center" VerticalAlignment="Top"
                            Foreground="white" Margin="0,11,0,0"/>
-                <TextBlock x:Name="OrdersToday" Text="1523" FontFamily="fonts/#Dosis" FontSize="25" HorizontalAlignment="Center" Margin="0,32,0,8" Grid.RowSpan="2" Foreground="white"/>
-                <Image Name="orderimg" Height="76" Grid.RowSpan="2" Width="AUTO" Source="/images/app-icon-sales-order.png" Grid.Column="1" HorizontalAlignment="Left" Stretch="Uniform"/>
+                <TextBlock x:Name="OrdersToday" Text="0" FontFamily="fonts/#Dosis" FontSize="25" HorizontalAlignment="Center" Margin="0,32,0,8" Grid.RowSpan="2" Foreground="white"/>
+                <Image Name="orderimg" Height="76" Grid.RowSpan="2" Width="AUTO" Source="/images/OrdersIcon.png" Grid.Column="1" HorizontalAlignment="Left" Stretch="Uniform"/>
 
             </Grid>
             <Grid Grid.Row="0" Background="#0F0F2D" Width="200" HorizontalAlignment="Left" Margin="236,0,0,0">
@@ -160,15 +160,14 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="Profit Today:" TextWrapping="Wrap" FontFamily="fonts/#Dosis" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Top" Foreground="white" Margin="0,13,0,0"/>
-                <TextBlock x:Name="ProfitToday" Text="1523$" FontFamily="fonts/#Dosis" FontSize="25" HorizontalAlignment="Center" Margin="0,32,0,8" Grid.RowSpan="2" Foreground="white"/>
+                <TextBlock x:Name="ProfitToday" Text="0" FontFamily="fonts/#Dosis" FontSize="25" HorizontalAlignment="Center" Margin="0,32,0,8" Grid.RowSpan="2" Foreground="white"/>
                 <Image Name="orderimg1" Height="AUTO" Grid.RowSpan="2" Width="AUTO" Source="/images/profits.png" Grid.Column="1" HorizontalAlignment="Left" Margin="20,2,0,2"/>
             </Grid>
-            <TextBlock Text="Profit by product type" TextWrapping="Wrap" Grid.Row="1" HorizontalAlignment="Center"  FontSize="35" Foreground="White"
+            <TextBlock Text="Profit by product type" TextWrapping="Wrap" Grid.Row="1" HorizontalAlignment="Center"  FontSize="32" Foreground="White"
                        FontFamily="fonts/#Dosis"/>
             <lvc:PieChart 
                  Grid.Row="1" 
                  Name="Pie"
-                    
                  Margin="2,36,-2,8" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
             <RadioButton Name="PieCharDatatLast7days" Grid.Row="2" Height="20" Width="80" Style="{StaticResource {x:Type ToggleButton}}" Content="Last 7 days" 
                          VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="23,0,0,3" Background="#FE6584" Checked="PreparePieChartWithDate"/>
@@ -237,7 +236,7 @@
                         </Grid.RowDefinitions>
                         <Image Name="PordouctIMG" Source="/images/products.png" Height="70" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,2,0,0" Grid.RowSpan="2"></Image>
                         <TextBlock Grid.Column="1" Text="Total Products:" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="20" FontFamily="fonts/#Dosis" Foreground="White" Height="AUTO" Width="AUTO"/>
-                        <TextBlock Grid.Column="1" Grid.Row="1" Name="TotalProducts" TextAlignment="Center" Text="1532" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" FontFamily="fonts/#Dosis" Foreground="White" Margin="3,2,0,0" Height="AUTO" Width="128"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Name="TotalProducts" TextAlignment="Center" Text="0" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" FontFamily="fonts/#Dosis" Foreground="White" Margin="3,2,0,0" Height="AUTO" Width="128"/>
                     </Grid>
                     <Grid VerticalAlignment="Bottom" Height="1" Background="White" Width="AUTO"></Grid>
                     <Grid Grid.Row="1">
@@ -249,9 +248,9 @@
                             <RowDefinition></RowDefinition>
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
-                        <Image Grid.RowSpan="2" Name="CompaniesIMG" Source="/images/PikPng.com_business-icon-png_660381.png" Height="70" VerticalAlignment="Center" Margin="10,2,0,0"/>
+                        <Image Grid.RowSpan="2" Name="CompaniesIMG" Source="/images/CompaniesIcon.png" Height="70" VerticalAlignment="Center" Margin="10,2,0,0"/>
                         <TextBlock Grid.Column="1" Text="Total Companies:" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="20" FontFamily="fonts/#Dosis" Foreground="White" Height="AUTO" Width="AUTO"/>
-                        <TextBlock Grid.Column="1" Grid.Row="1" Name="TotalCompanies" TextAlignment="Center" Text="1532" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" FontFamily="fonts/#Dosis" Foreground="White" Width="128" Grid.ColumnSpan="2"/>
+                        <TextBlock Grid.Column="1" Grid.Row="1" Name="TotalCompanies" TextAlignment="Center" Text="0" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" FontFamily="fonts/#Dosis" Foreground="White" Width="128" Grid.ColumnSpan="2"/>
                     </Grid>
                     <Grid Grid.Row="1" VerticalAlignment="Bottom" Height="1" Background="White" Width="AUTO"></Grid>
                     <Grid Grid.Row="2">
@@ -264,7 +263,7 @@
                             <RowDefinition></RowDefinition>
                         </Grid.RowDefinitions>
                         <TextBlock  Grid.Column="1" Text="Total Profit(7 days):" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="20" FontFamily="fonts/#Dosis" Foreground="White" Height="AUTO" Width="AUTO"  />
-                        <TextBlock Grid.Column="1" Grid.Row="1" Name="TotalProfits" TextAlignment="Center" Text="1532" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" FontFamily="fonts/#Dosis" Foreground="White" Width="128" Grid.ColumnSpan="2" />
+                        <TextBlock Grid.Column="1" Grid.Row="1" Name="TotalProfits" TextAlignment="Center" Text="0" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="30" FontFamily="fonts/#Dosis" Foreground="White" Width="128" Grid.ColumnSpan="2" />
                         <Image Grid.RowSpan="2" Name="Profit2IMG" Source="/images/profits (1).png" Height="100" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,8,0,0" ></Image>
                     </Grid>
                 </Grid>
@@ -299,7 +298,7 @@
             </Button>
             <Button Style="{StaticResource NoGlow}" Grid.Column="1" Grid.Row="2" BorderBrush="{x:Null}" Background="{x:Null}" Click="Pdf_Click">
                 <StackPanel>
-                    <Image Source="/images/icon-pdf-6.jpg" Stretch="Uniform" Height="100" Name="PDFimage"/>
+                    <Image Source="/images/PdfIcon.jpg" Stretch="Uniform" Height="100" Name="PDFimage"/>
                     <TextBlock FontFamily="fonts/#Dosis" Foreground="White" HorizontalAlignment="Center">Pdf Report</TextBlock>
                 </StackPanel>
             </Button>

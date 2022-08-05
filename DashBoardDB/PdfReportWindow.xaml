@@ -48,7 +48,7 @@
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="1" Click="Close_Click" BorderBrush="{x:Null}" Style="{StaticResource NoGlow}">
                     <Button.Background>
-                        <ImageBrush ImageSource="/images/kisspng-line-angle-pink-m-product-design-symbol-close-window-icon-free-download-png-and-vector-5c6921a8128a99.937018031550393768076.png"/>
+                        <ImageBrush ImageSource="/images/CloseIcon.png"/>
                     </Button.Background>
                 </Button>
                 <TextBlock Text="Customize your Pdf report" FontSize="30" FontFamily="fonts/#Dosis" Foreground="White" 
