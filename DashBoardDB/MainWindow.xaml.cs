@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore.SkiaSharpView;
+﻿using LiveChartsCore.SkiaSharpView;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,6 @@ using System.Windows;
 
 namespace DashBoardDB
 {
-    [ObservableObject]
     public partial class MainWindow : Window
     {
         Double appVersion = 0.2;

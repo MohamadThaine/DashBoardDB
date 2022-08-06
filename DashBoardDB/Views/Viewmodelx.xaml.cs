@@ -1,12 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using LiveChartsCore;
+﻿using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using MySql.Data.MySqlClient;
 using System;
 
 namespace DashBoardDB
 {
-    [ObservableObject]
     public partial class Viewmodelx
     {
         MySqlConnection connection;
